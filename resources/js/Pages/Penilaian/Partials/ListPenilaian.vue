@@ -25,7 +25,7 @@
                                     </th>
                                     <th scope="col"
                                         class="px-2 py-3 ml-9 text-left justify-start text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        
+                                    
                                     </th>
                             
                                     <th scope="col"
