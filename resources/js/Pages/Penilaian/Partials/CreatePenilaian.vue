@@ -15,7 +15,7 @@
                             <div v-if="$page.props.user.role==='admin'">
                                 <div>
                                     <label class="text-gray-700">Tanggal Penilaian
-                                        <jet-input type="date" class="block w-52 py-2 ml-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" placeholder="Tanggal Penilaian"
+                                        <input type="date" class="block w-52 py-2 ml-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" placeholder="Tanggal Penilaian"
                                                     ref="tgl"
                                                     v-model="form.tgl"
                                                     @keyup.enter="create" />
@@ -25,7 +25,7 @@
                                     <div class="flex">
                                         <label class="text-gray-900">
                                             Periode
-                                            <select class="block py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                                            <select class="block py-2 border ml-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                                 v-model="bulan" @change="setPeriode()">
                                                 <option value="" disabled selected>Pilih Bulan</option>
                                                 <option v-for="bulan in periode_bulan" :key="bulan.index" :value="bulan.index+1">{{bulan.nama}}</option>
@@ -46,13 +46,18 @@
                                 </div>
                                     <label class="text-gray-900">
                                         Penilai
-                                        <select class="block w-52 py-2 border ml-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                            required v-model="form.pernum" v-on:change="getPenilaianTim(form.pernum)">
-                                            <option value="" disabled selected>Pilih Penilai</option>
-                                            <option v-for="karyawan in tims" :key="karyawan.id" :value="karyawan.karyawan.pernum">{{karyawan.karyawan.nama}} - {{karyawan.tim.nama}}</option>
-                                        </select>
-                                    
-                                        <jet-input-error :message="form.errors.pernum" class="mt-2" />     
+                                        <div class="items-start mx-auto my-auto">
+                                            <jet-input v-model="member" @input="filterMember()" class="w-10/12 ml-2"></jet-input>
+                                            <div v-if="memberList" class="options border-transparent ml-2" ref="karyawan">
+                                                <ul>
+                                                    <li v-for="karyawan in memberList" :key="karyawan.pernum" class="hover:bg-green-600" @click="setMember(karyawan)">
+                                                        {{karyawan.nama}} - {{karyawan.nama_tim}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <jet-input-error :message="form.errors.pernum" class="mt-2" />
                                     </label>
                                     <label class="text-gray-700">
                                         Tim yang Dinilai
@@ -151,6 +156,8 @@ export default {
             creatingPenilaian: false,
             openNilai:false, 
             listTim:[],
+            member:'',
+            memberList:[],
             month:[
                 {
                     nama:'Januari',
@@ -209,9 +216,23 @@ export default {
         penilaianTims:Array,
         penilaianDetails:Array,
         pernum:String,
+        karyawans:Array,
+    },
+    mounted(){
+        this.getTim();
     },
 
+
     methods: {
+        getTim(){
+            for(var i=0;i<this.karyawans.length;i++){
+                for(var j=0;j<this.tims.length;j++){
+                    if(this.karyawans[i].nip == this.tims[j].nip){
+                        this.karyawans[i].nama_tim = this.tims[j].tim.nama
+                    }
+                }
+            }
+        },
         createPenilaian() {
             this.creatingPenilaian = true;
             this.getPeriode();
@@ -283,6 +304,22 @@ export default {
             
         },
 
+        filterMember(){
+            const query = this.member.toLowerCase();
+            if(this.member === ''){
+                return this.memberList;
+            }
+            this.memberList = this.karyawans.filter((nama) => {
+                return Object.values(nama).some((word) => String(word).toLowerCase().includes(query));
+            })
+        }, 
+
+        setMember(karyawan){
+            this.member = karyawan.nama
+            this.form.pernum = karyawan.pernum;
+            this.memberList = [];
+        },
+
         closeModal() {
             this.creatingPenilaian = false
             this.form.clearErrors()
@@ -292,3 +329,34 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+        input{
+            width: 90%;
+            height: 30px;
+            border: 2px solid lightgray;
+            font-size: 18px;
+            padding-left: 5px;
+
+        }
+        .options{
+            width: 75%;
+        }        
+            ul{
+                list-style: none;
+                text-align: left;
+                padding-left: 8px;
+                max-height: 200px;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                border: 1px solid lightgray;
+            }
+            li{
+                width: 100%;
+                border-bottom: 1px solid lightgray;
+                padding: 10px;
+                background-color: #f1f1f1;
+                cursor: pointer;
+            }
+            
+</style>

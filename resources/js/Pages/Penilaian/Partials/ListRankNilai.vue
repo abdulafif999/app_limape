@@ -1,8 +1,8 @@
 <template>
     <div>
-        <jet-secondary-button @click="showNilai">
-            Petunjuk Rank Penilaian
-        </jet-secondary-button>
+        <blue-button class="rounded-lg hover:shadow-md" @click="showNilai">
+            ?
+        </blue-button>
 
         <!-- Delete Account Confirmation Modal -->
         <jet-dialog-modal :show="nilaiKriteriaModal" @close="nilaiKriteriaModal = false">
@@ -91,6 +91,7 @@ import JetDialogModal from '@/Jetstream/DialogModal.vue'
 import JetInput from '@/Jetstream/Input.vue'
 import JetInputError from '@/Jetstream/InputError.vue'
 import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
+import BlueButton from '@/Components/BlueButton.vue'
 import { Inertia } from '@inertiajs/inertia'
 
 export default {
@@ -100,6 +101,7 @@ export default {
         JetInput,
         JetInputError,
         JetSecondaryButton,
+        BlueButton,
     },
 
     props:{

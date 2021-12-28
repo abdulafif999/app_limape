@@ -39,19 +39,19 @@
 
                                 <!--Session Penilaian Berdasarkan Kriteria-->
                                     <TabsWrapper>
-                                        <Tab title="P1" :isActive="activeTab === 'tab1'" @click="clickTab('tab1')" />
-                                        <Tab title="P2" :isActive="activeTab === 'tab2'" @click="clickTab('tab2')" />
-                                        <Tab title="P3" :isActive="activeTab === 'tab3'" @click="clickTab('tab3')" />
-                                        <Tab title="P4" :isActive="activeTab === 'tab4'" @click="clickTab('tab4')" />
-                                        <Tab title="P5" :isActive="activeTab === 'tab5'" @click="clickTab('tab5')" />
+                                        <Tab title="P1" :isActive="activeTab === 'tab1'" @click="clickTab('tab1', 1)" :class="{ 'bg-red-700 text-white': session == 1 }" />
+                                        <Tab title="P2" :isActive="activeTab === 'tab2'" @click="clickTab('tab2', 2)" :class="{ 'bg-blue-700 text-white': session == 2 }" />
+                                        <Tab title="P3" :isActive="activeTab === 'tab3'" @click="clickTab('tab3', 3)" :class="{ 'bg-yellow-500 text-white': session == 3 }"/>
+                                        <Tab title="P4" :isActive="activeTab === 'tab4'" @click="clickTab('tab4', 4)" :class="{ 'bg-green-600 text-white': session == 4 }"/>
+                                        <Tab title="P5" :isActive="activeTab === 'tab5'" @click="clickTab('tab5', 5)" :class="{ 'bg-pink-600 text-white': session == 5 }"/>
                                     </TabsWrapper>
 
                                     <TabsContent>
                                         <div v-if="activeTab === 'tab1'">
                                             <div v-for="item in kriteria1" :key="item.id" class="text-red-600 mb-4">
                                             <div v-if="item === null"> Tidak ada Kriteria </div>
-                                            <label class="bg-white border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-1/10" placeholder="Nilai"
+                                            <label class="bg-red border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
+                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
                                                 ref="nilai"
                                                 v-model="form.nilai[item.kriteriaIndex]"
                                                 @keyup.enter="create"
@@ -78,7 +78,7 @@
                                                 <input type="file" class=""
                                                             :ref="'foto'+item.kriteriaIndex"
                                                             @change="updateFotoPreview(item.kriteriaIndex, 'foto'+item.kriteriaIndex)"
-                                                            disabled> Fitur ini akan hadir segera
+                                                            disabled> <label class="border-4"> Fitur ini akan hadir segera </label>
 
                                                 <jet-label for="foto" value="Foto" />                                            
 
@@ -97,7 +97,7 @@
                                             <div v-for="item in kriteria2" :key="item.id" class="text-blue-700  mb-4">
                                                 <div v-if="item === null"> Tidak ada Kriteria</div>
                                                 <label class="bg-white border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-3/4" placeholder="Nilai"
+                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
                                                     ref="nilai"
                                                     v-model="form.nilai[item.kriteriaIndex]"
                                                     @keyup.enter="create" />
@@ -123,7 +123,7 @@
                                                     <input type="file" class=""
                                                             :ref="'foto'+item.kriteriaIndex"
                                                             @change="updateFotoPreview(item.kriteriaIndex, 'foto'+item.kriteriaIndex)"
-                                                            disabled> Fitur ini akan hadir segera
+                                                            disabled> <label class="border-4"> Fitur ini akan hadir segera </label>
 
                                                     <jet-label for="foto" value="Foto" />                                            
 
@@ -142,7 +142,7 @@
                                             <div v-for="item in kriteria3" :key="item.id" class="text-yellow-700 mb-4">
                                                 <div v-if="item === null"> Tidak ada Kriteria   </div>
                                                 <label class="bg-white border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-3/4" placeholder="Nilai"
+                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
                                                     ref="nilai"
                                                     v-model="form.nilai[item.kriteriaIndex]"
                                                     @keyup.enter="create" />
@@ -168,7 +168,7 @@
                                                     <input type="file" class=""
                                                             :ref="'foto'+item.kriteriaIndex"
                                                             @change="updateFotoPreview(item.kriteriaIndex, 'foto'+item.kriteriaIndex)"
-                                                            disabled> Fitur ini akan hadir segera
+                                                            disabled> <label class="border-4"> Fitur ini akan hadir segera </label>
 
                                                     <jet-label for="foto" value="Foto" />                                            
 
@@ -186,7 +186,7 @@
                                             <div v-for="item in kriteria4" :key="item.id" class="text-green-600 mb-4">
                                                 <div v-if="item === null"> Tidak ada Kriteria   </div>
                                                 <label class="bg-white border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-3/4" placeholder="Nilai"
+                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
                                                     ref="nilai"
                                                     v-model="form.nilai[item.kriteriaIndex]"
                                                     @keyup.enter="create" />
@@ -208,11 +208,11 @@
 
                                                     <jet-input-error :message="form.errors.rekomendasi" class="mt-2" />
                                                 </div>
-                                                <div>
+                                                <div >
                                                     <input type="file" class=""
                                                             :ref="'foto'+item.kriteriaIndex"
                                                             @change="updateFotoPreview(item.kriteriaIndex, 'foto'+item.kriteriaIndex)"
-                                                            disabled> Fitur ini akan hadir segera
+                                                            disabled> <label class="border-4"> Fitur ini akan hadir segera </label>
 
                                                     <jet-label for="foto" value="Foto" />                                            
 
@@ -231,7 +231,7 @@
                                             <div v-for="item in kriteria5" :key="item.id" class="text-pink-600 mb-4">
                                                 <div v-if="item === null"> Tidak ada Kriteria   </div>
                                                 <label class="bg-white border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-3/4" placeholder="Nilai"
+                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
                                                     ref="nilai"
                                                     v-model="form.nilai[item.kriteriaIndex]"
                                                     @keyup.enter="create" />
@@ -257,7 +257,7 @@
                                                     <input type="file" class=""
                                                             :ref="'foto'+item.kriteriaIndex"
                                                             @change="updateFotoPreview(item.kriteriaIndex, 'foto'+item.kriteriaIndex)"
-                                                            disabled> Fitur ini akan hadir segera
+                                                            disabled> <label class="border-4"> Fitur ini akan hadir segera </label>
 
                                                     <jet-label for="foto" value="Foto" />                                            
 
@@ -298,6 +298,7 @@
     import {TabsWrapper, TabsContent, Tab} from '@ocrv/vue-tailwind-tabs'
 
 
+
     export default {
         components: {
             AppLayout,
@@ -327,6 +328,7 @@
                 this.getKriteria4();
                 this.getKriteria5();
                 this.getPenilaianId();
+                this.clickTab('tab1', 1)
                 this.form.pernum = this.pernum;
         },
 
@@ -481,8 +483,9 @@
                 reader.readAsDataURL(this.$refs[name].files[0]);
                 
             },
-            clickTab(name){
+            clickTab(name, session){
                 this.activeTab = name;
+                this.session = session;
             },
             selectNewFoto(index) {
                 this.$refs.foto.click();

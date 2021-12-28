@@ -978,6 +978,8 @@ video {
 	width: 13rem !important;
 }.w-10\/12 {
 	width: 83.333333% !important;
+}.w-1\/12 {
+	width: 8.333333% !important;
 }.min-w-0 {
 	min-width: 0px !important;
 }.min-w-full {
@@ -1147,6 +1149,8 @@ video {
 	border-width: 1px !important;
 }.border-2 {
 	border-width: 2px !important;
+}.border-4 {
+	border-width: 4px !important;
 }.border-b-2 {
 	border-bottom-width: 2px !important;
 }.border-l-4 {
@@ -1239,6 +1243,15 @@ video {
 }.bg-gray-700 {
 	--tw-bg-opacity: 1 !important;
 	background-color: rgba(55, 65, 81, var(--tw-bg-opacity)) !important;
+}.bg-blue-700 {
+	--tw-bg-opacity: 1 !important;
+	background-color: rgba(29, 78, 216, var(--tw-bg-opacity)) !important;
+}.bg-yellow-500 {
+	--tw-bg-opacity: 1 !important;
+	background-color: rgba(245, 158, 11, var(--tw-bg-opacity)) !important;
+}.bg-pink-600 {
+	--tw-bg-opacity: 1 !important;
+	background-color: rgba(219, 39, 119, var(--tw-bg-opacity)) !important;
 }.bg-opacity-25 {
 	--tw-bg-opacity: 0.25 !important;
 }.bg-cover {
@@ -1448,6 +1461,15 @@ video {
 }.text-pink-600 {
 	--tw-text-opacity: 1 !important;
 	color: rgba(219, 39, 119, var(--tw-text-opacity)) !important;
+}.text-red-700 {
+	--tw-text-opacity: 1 !important;
+	color: rgba(185, 28, 28, var(--tw-text-opacity)) !important;
+}.text-indigo-800 {
+	--tw-text-opacity: 1 !important;
+	color: rgba(55, 48, 163, var(--tw-text-opacity)) !important;
+}.text-yellow-600 {
+	--tw-text-opacity: 1 !important;
+	color: rgba(217, 119, 6, var(--tw-text-opacity)) !important;
 }.underline {
 	text-decoration: underline !important;
 }.antialiased {
@@ -1595,6 +1617,9 @@ video {
 }.hover\:text-indigo-900:hover {
 	--tw-text-opacity: 1 !important;
 	color: rgba(49, 46, 129, var(--tw-text-opacity)) !important;
+}.hover\:shadow-md:hover {
+	--tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+	box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
 }.focus\:z-10:focus {
 	z-index: 10 !important;
 }.focus\:border-blue-300:focus {

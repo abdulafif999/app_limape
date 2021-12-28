@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Http\Controllers\PenilaianDetailController;
 use App\Models\IndexKriteria;
+use App\Models\Karyawan;
 use App\Models\PenilaianDetail;
 use App\Models\PenilaianTim;
 use App\Models\Tim;
@@ -50,6 +51,10 @@ class PenilaianController extends Controller
         $unitDetails = UnitDetail::with('timUnit','karyawan')->get();
         $pernum = Auth::user()->pernum;
         $role = Auth::user()->role;
+        $filter = TimDetail::all('nip')->toArray();
+        $karyawan = Karyawan::whereIn('nip', $filter)->get();
+
+
         return Inertia::render('Penilaian/Index', [
             'penilaians' => $data, 
             'tims' => $tims,
@@ -62,6 +67,7 @@ class PenilaianController extends Controller
             'role' => $role,
             'term' =>$request->term,
             'periode'=>$request->periode,
+            'karyawans' => $karyawan,
         ]);
     }
 

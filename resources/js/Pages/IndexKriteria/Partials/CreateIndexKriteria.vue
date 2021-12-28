@@ -55,15 +55,15 @@
                 </div> 
                     <div class="mt-4 form-group">
                         <TabsWrapper>
-                            <Tab title="P1" :isActive="activeTab === 'tab1'" @click="clickTab('tab1')" />
-                            <Tab title="P2" :isActive="activeTab === 'tab2'" @click="clickTab('tab2')" />
-                            <Tab title="P3" :isActive="activeTab === 'tab3'" @click="clickTab('tab3')" />
-                            <Tab title="P4" :isActive="activeTab === 'tab4'" @click="clickTab('tab4')" />
-                            <Tab title="P5" :isActive="activeTab === 'tab5'" @click="clickTab('tab5')" />
+                            <Tab title="P1" :isActive="activeTab === 'tab1'" @click="clickTab('tab1', 1)" :class="{ 'bg-red-700 text-white': session == 1 }" />
+                            <Tab title="P2" :isActive="activeTab === 'tab2'" @click="clickTab('tab2', 2)" :class="{ 'bg-blue-700 text-white': session == 2 }" />
+                            <Tab title="P3" :isActive="activeTab === 'tab3'" @click="clickTab('tab3', 3)" :class="{ 'bg-yellow-500 text-white': session == 3 }"/>
+                            <Tab title="P4" :isActive="activeTab === 'tab4'" @click="clickTab('tab4', 4)" :class="{ 'bg-green-600 text-white': session == 4 }"/>
+                            <Tab title="P5" :isActive="activeTab === 'tab5'" @click="clickTab('tab5', 5)" :class="{ 'bg-pink-600 text-white': session == 5 }"/>
                         </TabsWrapper>
                         <TabsContent>
                             <div v-if="activeTab === 'tab1'">
-                                <div>
+                                <div class="text-red-700">
                                     <label>P1</label>
                                     <div>
                                         <input type="number" min="0" max="1" step="0.1" class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Index Kriteria 0-1"
@@ -76,7 +76,7 @@
                                     <jet-input-error :message="form.errors.singleIndex" class="mt-2" />
                                 </div>
 
-                                <div v-for="item in kriteria1" :key="item.id">
+                                <div v-for="item in kriteria1" :key="item.id" class="text-red-700">
                                     <div v-if="item === null"> Tidak ada Kriteria </div>
                                     <label>{{item.nama}} - {{item.sub_kriteria}}</label>
                                     <div>
@@ -95,7 +95,7 @@
                                 </div>
                             </div>
                             <div v-if="activeTab === 'tab2'">
-                                <div v-on:show="session=2">
+                                <div v-on:show="session=2" class="text-indigo-800">
                                     <label>P2</label>
                                     <input type="number" min="0" max="1" step="0.1" class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Index Kriteria 0-1"
                                         ref="index"
@@ -105,7 +105,7 @@
                                     
                                     <jet-input-error :message="form.errors.singleIndex" class="mt-2" />  
                                 </div>                        
-                                <div v-for="item in kriteria2" :key="item.id">
+                                <div v-for="item in kriteria2" :key="item.id" class="text-indigo-800">
                                     <div v-if="item === null"> Tidak ada Kriteria </div>
                                     <label>{{item.nama}} - {{item.sub_kriteria}}</label>
                                     <input type="number" min="0" max="1" step="0.1" class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Index Kriteria 0-1"
@@ -121,7 +121,7 @@
 
                             </div>
                             <div v-if="activeTab === 'tab3'">
-                                <div v-on:show="session=3">
+                                <div v-on:show="session=3" class="text-yellow-600">
                                     <label>P3</label>
                                     <input type="number" min="0" max="1" step="0.1" class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Index Kriteria 0-1"
                                         ref="index"
@@ -131,7 +131,7 @@
                                     
                                     <jet-input-error :message="form.errors.singleIndex" class="mt-2" />  
                                 </div>                        
-                                <div v-for="item in kriteria3" :key="item.id">
+                                <div v-for="item in kriteria3" :key="item.id" class="text-yellow-600">
                                     <div v-if="item === null"> Tidak ada Kriteria </div>
                                     <label>{{item.nama}} - {{item.sub_kriteria}}</label>
                                     <input type="number" min="0" max="1" step="0.1" class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Index Kriteria 0-1"
@@ -146,8 +146,8 @@
                                 </div>                        
 
                             </div>
-                            <div v-if="activeTab === 'tab4'">
-                                <div v-on:show="session=4">
+                            <div v-if="activeTab === 'tab4'" >
+                                <div v-on:show="session=4" class="text-green-600">
                                     <label>P4</label>
                                     <input type="number" min="0" max="1" step="0.1" class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Index Kriteria 0-1"
                                         ref="index"
@@ -157,7 +157,7 @@
                                     
                                     <jet-input-error :message="form.errors.singleIndex" class="mt-2" />  
                                 </div>                         
-                                <div v-for="item in kriteria4" :key="item.id">
+                                <div v-for="item in kriteria4" :key="item.id" class="text-green-600">
                                     <div v-if="item === null"> Tidak ada Kriteria </div>
                                     <label>{{item.nama}} - {{item.sub_kriteria}}</label>
                                     <input type="number" min="0" max="1" step="0.1" class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Index Kriteria 0-1"
@@ -173,7 +173,7 @@
 
                             </div>
                             <div v-if="activeTab === 'tab5'">
-                                <div v-on:show="session=5">
+                                <div v-on:show="session=5" class="text-pink-600">
                                     <label>P5</label>
                                     <input type="number" min="0" max="1" step="0.1" class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Index Kriteria 0-1"
                                         ref="index"
@@ -183,7 +183,7 @@
                                     
                                     <jet-input-error :message="form.errors.singleIndex" class="mt-2" />  
                                 </div>                         
-                                <div v-for="item in kriteria5" :key="item.id">
+                                <div v-for="item in kriteria5" :key="item.id" class="text-pink-600">
                                     <div v-if="item === null"> Tidak ada Kriteria </div>
                                     <label>{{item.nama}} - {{item.sub_kriteria}}</label>
                                     <input type="number" min="0" max="1" step="0.1" class="mt-1 block w-3/4 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" placeholder="Index Kriteria 0-1"
@@ -245,14 +245,15 @@ export default {
         this.getKriteria3();
         this.getKriteria4();
         this.getKriteria5();
+        this.clickTab('tab1', 1);
     },
 
     data() {
         return {
 
-            session:0,
+            session:1,
             bulan_awal:'',
-            tahun_awanl:'',
+            tahun_awal:'',
             bulan_akhir:'',
             tahun_akhir:'',
             kriteria1:[],
@@ -403,8 +404,9 @@ export default {
 
             this.form.reset()
         },
-        clickTab(name){
+        clickTab(name, session){
             this.activeTab = name;
+            this.session = session;
         },
     },
 }

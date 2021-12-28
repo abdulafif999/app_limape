@@ -327,6 +327,7 @@ export default {
 
         },
         tambahRank(rank){
+            this.form.reset();
             this.tambahModal = true;
             this.form.kriteria_id = rank.id;
         },
@@ -343,6 +344,7 @@ export default {
         },
 
         updateNilai(nilai) {
+            this.form.reset();
             this.updatingNilai = true;
             this.selectedRank = nilai;
             this.form.kriteria_id = nilai.kriteria_id;
@@ -350,11 +352,7 @@ export default {
             this.form.nilai_atas = nilai.nilai_atas;
             this.form.keterangan = nilai.keterangan;
 
-        },
-
-        fetchKriterias() {
-            Inertia.reload({ only: ['kriterias'] })
-        },        
+        },     
 
         update() {
             this.form.put(route('nilai.update', this.selectedRank.id), {

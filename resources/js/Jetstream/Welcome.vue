@@ -42,11 +42,8 @@
                     <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">Tim Terakhir yang Dinilai</div>
                 </div>
 
-                <div class="ml-12">
-                    <div class="mt-2 text-sm text-gray-500" v-if="$page.props.user.role == 'admin'">
-                        Anda adalah Admin
-                    </div>                    
-                    <div class="mt-2 text-sm text-gray-500" v-else-if="$page.props.user.role == 'user'">
+                <div class="ml-12">                  
+                    <div class="mt-2 text-sm text-gray-500">
                         <userUpdate :penilaians="penilaians" :currentUser="currentUser" ></userUpdate>
                     </div>
                 </div>

@@ -3,7 +3,7 @@
         <template #header>
             <h2 class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                 Penilaian
-                <create-penilaian :karyawans="karyawans" :tims="tims" :penilaianTims="penilaianTims" :unitDetails="unitDetails" :penilaianDetails="penilaianDetails" :pernum="pernum"/>
+                <create-penilaian :karyawans="karyawans" :tims="tims" :penilaianTims="penilaianTims" :unitDetails="unitDetails" :penilaianDetails="penilaianDetails" :pernum="pernum" />
             </h2>
         </template>
 

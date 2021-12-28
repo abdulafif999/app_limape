@@ -1,7 +1,7 @@
 <template>
     <div>
         <green-button @click="createKriteria">
-            New Kriteria
+            Tambah Kriteria
         </green-button>
 
         <!-- Delete Account Confirmation Modal -->
