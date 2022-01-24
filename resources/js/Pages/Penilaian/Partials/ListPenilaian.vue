@@ -1,7 +1,12 @@
 <template>
     <div>
+        <div class="bg-white text-left justify-center text-gray-600 capitalize h-12 border" v-if="$page.props.user.role=='user'">
+            <label class="h-10">
+                List Penilaian Yang Belum di Approve
+            </label>
+        </div>
         <!-- This example requires Tailwind CSS v2.0+ -->
-        <div class="flex flex-col">
+        <div class="flex flex-col" v-if="data.dataPenilaian" :v-bind="data.dataPenilaian">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -29,18 +34,29 @@
                                     </th>
                             
                                     <th scope="col"
-                                        class="text-left ml-6 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="text-left justify-end items-end ml-6 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Cari Tim
-                                        <select  class="block w-52 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                            @change="searchTerm()" v-model="term" id="search" type="text" >
-                                                                                    
-                                            <option value="">Pilih Tim 5P/Unit</option>
-                                            <option value="semua">Semua</option>
-                                            <option v-for="tim in timUnits" :key="tim.id" :value="tim.id">{{tim.nama}}</option>
-                                        </select>
+                                        <div v-if="$page.props.user.role=='admin'">
+                                            <select  class="block w-52 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                                                @change="searchTerm()" v-model="term" id="search" type="text" >
+                                                                                        
+                                                <option value="">Pilih Tim 5P/Unit</option>
+                                                <option value="semua">Semua</option>
+                                                <option v-for="tim in timUnits" :key="tim.id" :value="tim.id" >{{tim.nama}}</option>
+                                            </select>
+                                        </div>
+                                        <div v-else-if="$page.props.user.role=='user'">
+                                            <select  class="block w-52 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                                                @change="searchTerm()" v-model="term" id="search" type="text" >
+                                                                                        
+                                                <option value="">Pilih Tim 5P/Unit</option>
+                                                <option value="semua">Semua</option>
+                                                <option v-for="tim in tim_yg_dinilai" :key="tim.tim_unit_id" :value="tim.tim_unit.id" >{{tim.tim_unit.nama}}</option>
+                                            </select>
+                                        </div>
                                     </th>                                    
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs justify-end font-medium text-gray-500 uppercase tracking-wider">
+                                        class="py-3 text-left text-xs justify-end font-medium text-gray-500 uppercase tracking-wider">
                                         Periode
                                             <label class="flex">
                                                 
@@ -51,18 +67,19 @@
                                                     <option v-for="bulan in month" :key="bulan.index" :value="bulan.index+1">{{bulan.nama}}</option>
                                                 </select>     
                                                 <select class="block py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                                    v-model="tahun" @change="setPeriode()">
+                                                    v-model="tahun" >
                                                     <option value="" disabled selected>Pilih Tahun</option>
                                                     <option value="2021">2021</option>
                                                     <option value="2022">2022</option>
                                                 </select>    
                                             </label>
                                     </th>
-                                    <th scope="colgroup"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            
+                                    <th scope="col"
+                                        class="py-3 text-left text-xs font-medium text-gray-500 uppercase">>
+                                        <div v-if="showApproval == true">
+                                            <approval :role="role" :tims="tims" :pernum="pernum" :penilaianTims="penilaianTims" :indexKriterias="indexKriterias" :penilaianDetails="penilaianDetails" />
+                                        </div>
                                     </th>
-                                    <th></th>
                                                                       
                                 </tr>
                         </table>
@@ -74,7 +91,8 @@
                                         No
                                     </th>                                     
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        v-if="$page.props.user.role=='admin'">
                                         Nama Tim
                                     </th>                                    
                                     <th scope="col"
@@ -93,6 +111,11 @@
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Periode
                                     </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        v-if="$page.props.user.role=='admin' "> 
+                                        Status
+                                    </th>
                                     <th scope="col" class="relative px-6 py-3">
                                         <span class="sr-only">Detail Nilai</span>
                                     </th>                                    
@@ -100,39 +123,44 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="(penilaian, index) in data.dataPenilaian.slice().reverse()" :key="penilaian.id">
-                                    <td class="px-6 py-4 whitespace-nowrap border-r-2">
-                                        <div class="flex items-center">
-                                            {{ index+1 }}
-                                        </div>
-                                    </td>                                    
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            {{ penilaian.nama_tim }}
-                                        </div>
-                                    </td> 
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            {{ penilaian.karyawan.nama }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            {{ penilaian.tim_unit.nama }}
-                                        </div>
-                                    </td>                                                                        
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            {{ penilaian.tgl }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            {{ penilaian.bulan }}/{{penilaian.tahun}}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right flex text-sm font-medium">
-                                        <span><blue-button href="#" @click.prevent="openNilai(penilaian)">Show Nilai</blue-button></span>
-                                    </td>                                    
+                                        <td class="px-6 py-4 whitespace-nowrap border-r-2">
+                                            <div class="flex items-center">
+                                                {{ index+1 }}
+                                            </div>
+                                        </td>                                    
+                                        <td class="px-6 py-4 whitespace-nowrap" v-if="$page.props.user.role=='admin'">
+                                            <div class="flex items-center">
+                                                {{ penilaian.nama_tim }}
+                                            </div>
+                                        </td> 
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                {{ penilaian.karyawan.nama }}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                {{ penilaian.tim_unit.nama }}
+                                            </div>
+                                        </td>                                                                        
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                {{ penilaian.tgl }}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                {{ penilaian.bulan }}/{{penilaian.tahun}}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap" v-if="$page.props.user.role=='admin'" :class="{ 'text-green-700' :penilaian.approve == 1, 'text-red-600' :penilaian.approve == 0 }">
+                                            <div class="flex items-center">
+                                                {{ penilaian.status}}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right flex text-sm font-medium">
+                                            <span><blue-button href="#" @click.prevent="openNilai(penilaian)">Show Nilai</blue-button></span>
+                                        </td>
                                 </tr>
 
                                 <!-- More people... -->
@@ -151,100 +179,101 @@
             <template #content>
                 <div class="mt-4">
                     <div class="flex flex-col">
-            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Kriteria
-                                </th>                                   
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Sub Kriteria
-                                </th>                                    
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Nilai
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Rekomendasi
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Foto
-                                </th>
-                                <th scope="col" class="relative px-6 py-3">
-                                        <span class="sr-only">Detail Nilai</span>
-                                </th>                                                           
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="penilaian in form.listNilai" :key="penilaian.id">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        {{ penilaian.kriteria.nama }}
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        {{ penilaian.kriteria.sub_kriteria }}
-                                    </div>
-                                </td>                                                                        
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        {{penilaian.nilai}}
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        {{ penilaian.status }}
-                                    </div>
-                                </td>                                             
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        {{ penilaian.rekomendasi }}
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        {{ penilaian.foto }}
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <span><jet-button v-if="$page.props.user.pernum == penilaian.penilaian.pernum && $page.props.user.role == 'user'" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
-                                        <span><jet-button v-if="$page.props.user.role == 'admin'" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
-                                    </div>
-                                </td>                                                            
-                            </tr>
-                            <tr>
-                                <td colspan="5" class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        Nilai Total :
-                                    </div>
-                                </td>
-                                <td >
-                                    <div class="flex items-center">
-                                        {{this.nilaiTotal}}
-                                    </div>
-                                </td>
-                            </tr>
+                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Kriteria
+                                            </th>                                   
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Sub Kriteria
+                                            </th>                                    
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Nilai
+                                            </th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Status
+                                            </th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Rekomendasi
+                                            </th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Foto
+                                            </th>
+                                            <th scope="col" class="relative px-6 py-3">
+                                                    <span class="sr-only">Detail Nilai</span>
+                                            </th>                                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr v-for="penilaian in form.listNilai" :key="penilaian.id">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.kriteria.nama }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.kriteria.sub_kriteria }}
+                                                </div>
+                                            </td>                                                                        
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{penilaian.nilai}}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.status }}
+                                                </div>
+                                            </td>                                             
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.rekomendasi }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.foto }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <span><jet-button v-if="$page.props.user.pernum == penilaian.penilaian.pernum && $page.props.user.role == 'user'" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
+                                                    <span><jet-button v-if="$page.props.user.role == 'admin'" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
+                                                </div>
+                                            </td>                                                            
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    Nilai Total :
+                                                </div>
+                                            </td>
+                                            <td >
+                                                <div class="flex items-center">
+                                                    {{this.nilaiTotal}}
+                                                </div>
+                                            </td>
+                                        </tr>
 
 
-                                <!-- More people... -->
-                        </tbody>
-                    </table>
-                    </div>
-                    </div>
-                    </div>
+                                            <!-- More people... -->
+                                    </tbody>
+                                </table>
+                                
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </template>
@@ -326,6 +355,8 @@ import JetInputError from '@/Jetstream/InputError.vue'
 import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
 import JetCheckbox from '@/Jetstream/Checkbox.vue'
 import {TabsWrapper, TabsContent, Tab} from '@ocrv/vue-tailwind-tabs'
+import Approval from './Approval.vue'
+import Pagination from '@/Jetstream/Pagination'
 
 
 export default {
@@ -339,7 +370,9 @@ export default {
         BlueButton,
         TabsWrapper,
         TabsContent,
-        Tab
+        Tab,
+        Approval,
+        Pagination,
 
     },
 
@@ -354,15 +387,18 @@ export default {
         timUnits:Array,
         term:String,
         periode:String,
+        penilaianTims:Array,
+        indexKriterias:Array,
     },
     mounted(){
-        this.getData();
-        
+        this.getData();        
         
     },
 
     data() {
         return {
+            showApproval:false,
+            tim_yg_dinilai:[],
             detailNilai: false,
             editModal:false,
             selectedPenilaian:{},
@@ -372,6 +408,7 @@ export default {
             preview:'',
             bulan:'',
             tahun:2021,
+
 
             
             month:[
@@ -453,6 +490,11 @@ export default {
                     var period = new Date(this.penilaians[k].periode)
                     this.data.dataPenilaian[k].bulan = period.getMonth()+1;
                     this.data.dataPenilaian[k].tahun = period.getFullYear();
+                    if(this.penilaians[k].approve == true){
+                        this.data.dataPenilaian[k].status = 'Sudah di Approve';
+                    }else{
+                        this.data.dataPenilaian[k].status = 'Belum di Approve'
+                    }
                 }
             }
             else if(this.role == 'user'){
@@ -461,7 +503,7 @@ export default {
                         for(var index=0;index<this.penilaians.length;index++){
                             for(var j=0;j<this.tims.length;j++){
                                 if(this.tims[j].tim_id == this.tims[i].tim_id){
-                                    if(this.tims[j].karyawan.pernum == this.penilaians[index].pernum){
+                                    if(this.tims[j].karyawan.pernum == this.penilaians[index].pernum && this.penilaians[index].approve == false){
                                             var period = new Date(this.penilaians[index].periode)
                                             this.data.dataPenilaian[x] = this.penilaians[index];
                                             this.data.dataPenilaian[x].bulan = period.getMonth()+1;
@@ -476,7 +518,6 @@ export default {
                 }
             }
             this.getTimPenilai();
-            
         },
         
 
@@ -494,6 +535,7 @@ export default {
             for(var i =0;i<this.month.length;i++){
                 this.month[i].index = i;
             }
+            this.getKetua();
             
         },
     
@@ -550,7 +592,7 @@ export default {
             this.nilaiTotal = 0;
         },
         searchTerm(){
-            if(this.term == 'semua'){
+            if(this.term == 'semua' || this.term == ''){
                 this.$inertia.get(this.route('penilaian.index', {term: '', periode:''}, {preserveState:true, replace:true}));
                 this.getData();
             }else{
@@ -560,14 +602,43 @@ export default {
             
         },
         searchPeriode(){
-            if(this.bulan == 'semua'){
-                this.$inertia.get(this.route('penilaian.index', {term:this.term, periode: ''}, {preserveState:true}));
+            if(this.bulan == 'semua' || this.bulan == ''){
+                this.$inertia.get(this.route('penilaian.index', {term:this.term, periode: ''}, {preserveState:true ,replace:true}));
                 this.getData();
             }else{
-                this.$inertia.get(this.route('penilaian.index', {term:this.term, periode: this.form.periode}, {preserveState:true}));
+                this.$inertia.get(this.route('penilaian.index', {term:this.term, periode: this.form.periode}, {preserveState:true ,replace:true}));
                 this.getData();
             }
-        }
+        },
+        getKetua(){
+            if(this.role == 'admin'){
+                this.showApproval = true;
+            }
+            else{
+                for (let index = 0; index < this.tims.length; index++) {
+                    if(this.pernum == this.tims[index].karyawan.pernum && this.tims[index].posisi == 'Ketua'){
+                        this.showApproval = true;
+                    }
+                    
+                }
+            }
+            this.getTim();
+        },
+
+        getTim(){
+            var x=0;
+            for (let i = 0; i < this.penilaianTims.length; i++) {
+                for (let j = 0; j < this.tims.length; j++) {
+                    if(this.tims[j].karyawan.pernum == this.pernum){
+                        if(this.penilaianTims[i].tim_id == this.tims[j].tim_id){
+                            this.tim_yg_dinilai[x] = this.penilaianTims[i];
+                            x++;
+                        }
+                    }
+                    
+                }
+            }
+        },
     },
 }
 </script>

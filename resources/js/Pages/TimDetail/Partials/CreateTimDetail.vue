@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout :showPenilaian="true">
         <template #header>
             <h2 class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                 Tim Detail
@@ -88,7 +88,6 @@
 </template>
 <script>
 import JetButton from '@/Jetstream/Button.vue'
-import CircleButton from '@/Components/CircleButton.vue'
 import RedButton from '@/Components/RedButton.vue'
 import GreenButton from '@/Components/GreenButton.vue'
 import JetDialogModal from '@/Jetstream/DialogModal.vue'
@@ -106,7 +105,6 @@ export default {
         JetInput,
         JetInputError,
         JetSecondaryButton,
-        CircleButton,
         RedButton,
         GreenButton,
     },

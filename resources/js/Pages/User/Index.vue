@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="User">
+    <app-layout title="User" :showPenilaian="true">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 User List

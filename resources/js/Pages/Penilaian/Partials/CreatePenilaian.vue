@@ -5,7 +5,7 @@
         </green-button>
 
         <!-- Delete Account Confirmation Modal -->
-        <jet-dialog-modal :show="creatingPenilaian" @close="closeModal">
+        <jet-dialog-modal :show="creatingPenilaian" @close="closeModal" :max-width="maxWidth">
             <template #title>
                 Create Penilaian
             </template>
@@ -14,36 +14,6 @@
                 <div class="sm:-my-px sm:ml-1 sm:flex bg-gray mt-12 mb-14">
                             <div v-if="$page.props.user.role==='admin'">
                                 <div>
-                                    <label class="text-gray-700">Tanggal Penilaian
-                                        <input type="date" class="block w-52 py-2 ml-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" placeholder="Tanggal Penilaian"
-                                                    ref="tgl"
-                                                    v-model="form.tgl"
-                                                    @keyup.enter="create" />
-
-                                        <jet-input-error :message="form.errors.tgl" class="mt-2" />
-                                    </label>
-                                    <div class="flex">
-                                        <label class="text-gray-900">
-                                            Periode
-                                            <select class="block py-2 border ml-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                                v-model="bulan" @change="setPeriode()">
-                                                <option value="" disabled selected>Pilih Bulan</option>
-                                                <option v-for="bulan in periode_bulan" :key="bulan.index" :value="bulan.index+1">{{bulan.nama}}</option>
-                                            </select>     
-                                        </label>
-                                        <label class="text-gray-900">
-                                            Tahun
-                                            <select class="block py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                                v-model="tahun">
-                                                <option value="" disabled selected>Pilih Tahun</option>
-                                                <option value="2021">2021</option>
-                                                <option value="2022">2022</option>
-                                            </select>    
-                                        </label>          
-                                    </div>                
-                                    <jet-input-error :message="form.errors.periode" class="mt-2" />
-
-                                </div>
                                     <label class="text-gray-900">
                                         Penilai
                                         <div class="items-start mx-auto my-auto">
@@ -59,6 +29,7 @@
 
                                         <jet-input-error :message="form.errors.pernum" class="mt-2" />
                                     </label>
+
                                     <label class="text-gray-700">
                                         Tim yang Dinilai
                                         <select class="block w-52 py-2 border ml-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
@@ -68,25 +39,22 @@
                                         </select>
                                         <jet-input-error :message="form.errors.tim_unit_id" class="mt-2" />  
                                     </label>
-                            </div>
-                            <div v-else-if="$page.props.user.role === 'user'" :v-on:show="setPenilaianData()">
-                                <div :v-on:show="getPenilaianTim($page.props.user.pernum)" >
-                                    <div>
+
                                     <label class="text-gray-700">Tanggal Penilaian
-                                        <jet-input type="date" class="block w-52 py-2 ml-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" placeholder="Tanggal Penilaian"
+                                        <input type="date" class="block w-52 py-2 ml-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" placeholder="Tanggal Penilaian"
                                                     ref="tgl"
                                                     v-model="form.tgl"
                                                     @keyup.enter="create" />
 
                                         <jet-input-error :message="form.errors.tgl" class="mt-2" />
                                     </label>
-                                    <div class="flex ml-2">
+                                    <div class="flex">
                                         <label class="text-gray-900">
                                             Periode
-                                            <select class="block py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                                            <select class="block py-2 border ml-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                                 v-model="bulan" @change="setPeriode()">
                                                 <option value="" disabled selected>Pilih Bulan</option>
-                                                <option v-for="bulan in periode_bulan" :key="bulan.index" :value="(bulan.index)+1">{{bulan.nama}}</option>
+                                                <option v-for="bulan in month" :key="bulan.index" :value="bulan.index">{{bulan.nama}}</option>
                                             </select>     
                                         </label>
                                         <label class="text-gray-900">
@@ -102,6 +70,12 @@
                                     <jet-input-error :message="form.errors.periode" class="mt-2" />
 
                                 </div>
+                                    
+                                    
+                            </div>
+                            <div v-else-if="$page.props.user.role === 'user'" :v-on:show="setPenilaianData()">
+                                <div :v-on:show="getPenilaianTim($page.props.user.pernum)" >
+                                    <div>
                                     <label class="text-gray-700" >
                                         Tim yang Dinilai
                                         <select class="block w-52 py-2 border ml-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
@@ -110,9 +84,131 @@
                                             <option v-for="tim in form1.timList" :key="tim.tim_unit_id" :value="tim.tim_unit_id">{{tim.tim_unit.nama}}</option>
                                         </select>
                                         <jet-input-error :message="form.errors.tim_unit_id" class="mt-2" />  
-                                    </label>                                    
+                                    </label>   
+                                    <label class="text-gray-700">Tanggal Penilaian
+                                        <jet-input type="date" class="block w-52 py-2 ml-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" placeholder="Tanggal Penilaian"
+                                                    ref="tgl"
+                                                    v-model="form.tgl"
+                                                    @keyup.enter="create" />
+
+                                        <jet-input-error :message="form.errors.tgl" class="mt-2" />
+                                    </label>
+                                    <div class="flex ml-2">
+                                        <label class="text-gray-900">
+                                            Periode
+                                            <select class="block py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                                                v-model="bulan" @change="setPeriode()">
+                                                <option value="" disabled selected>Pilih Bulan</option>
+                                                <option v-for="bulan in periode_bulan" :key="bulan.index" :value="bulan.index">{{bulan.nama}}</option>
+                                            </select>     
+                                        </label>
+                                        <label class="text-gray-900">
+                                            Tahun
+                                            <select class="block py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                                                v-model="tahun">
+                                                <option value="" disabled selected>Pilih Tahun</option>
+                                                <option value="2021">2021</option>
+                                                <option value="2022">2022</option>
+                                            </select>    
+                                        </label>          
+                                    </div>                
+                                    <jet-input-error :message="form.errors.periode" class="mt-2" />
+
+                                </div>
+                                                                     
                                 </div>
                             </div>
+                </div>
+
+
+                <div v-if="showNilai == true" :v-bind="showNilai">
+                    <div class="flex flex-col">
+                        <div class="py-my-6 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Kriteria
+                                            </th>                                   
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Sub Kriteria
+                                            </th>                                    
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Nilai
+                                            </th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Status
+                                            </th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Rekomendasi
+                                            </th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Foto
+                                            </th>                                                     
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr v-for="penilaian in listNilai" :key="penilaian.id">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.kriteria.nama }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.kriteria.sub_kriteria }}
+                                                </div>
+                                            </td>                                                                        
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{penilaian.nilai}}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.status }}
+                                                </div>
+                                            </td>                                             
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.rekomendasi }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ penilaian.foto }}
+                                                </div>
+                                            </td>                                                            
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    Nilai Total :
+                                                </div>
+                                            </td>
+                                            <td >
+                                                <div class="flex items-center">
+                                                    {{this.nilaiTotal}}
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                            <!-- More people... -->
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </template>
 
@@ -154,7 +250,7 @@ export default {
     data() {
         return {
             creatingPenilaian: false,
-            openNilai:false, 
+            showNilai:false,
             listTim:[],
             member:'',
             memberList:[],
@@ -199,14 +295,16 @@ export default {
             tahun:2021,
             
             form: this.$inertia.form({
-                tgl: new Date(),
+                tgl: '',
                 pernum: '',
                 tim_unit_id: '',
                 periode:''
             }), 
             form1: this.$inertia.form({
                 timList: [],
-            }),             
+            }),
+            listNilai:[],
+            maxWidth:'2xl',
                       
         }
     },
@@ -260,39 +358,66 @@ export default {
 
         },
         setPeriode(){
-            if(this.bulan < 10 && this.bulan>=1){
-                var output = this.tahun + '-' + '0' + this.bulan + '-' + '01';
-            }else if(this.bulan >= 10){
-                var output = this.tahun + '-' + this.bulan + '-' + '01';
+            if(this.bulan < 9 && this.bulan>=0){
+                var output = this.tahun + '-' + '0' + (this.bulan + 1) + '-' + '01';
+            }else if(this.bulan >= 9){
+                var output = this.tahun + '-' + (this.bulan + 1) + '-' + '01';
             }
             this.form.periode = output;
         },
 
         create() {
-            
-            this.form.post(route('penilaian.store'), {
+            var check = this.checkPenilaian();
+
+            if(check){
+                this.showNilai =true;
+                this.maxWidth = '3xl';
+                this.openNilai();
+            }else{ 
+                this.showNilai= false;
+                this.form.post(route('penilaian.store'), {
                 preserveScroll: true,
                 preserveState: true,
                 onSuccess: () => {
                     this.form.closeModal();
                     this.form.reset();
                 },
-            })
+                })
+            }
+        },
+        openNilai(){
+            var j=0;
+            for(var index=0;index<this.penilaianDetails.length;index++){
+                if(this.penilaianDetails[index].penilaian.tim_unit_id == this.form.tim_unit_id && this.penilaianDetails[index].penilaian.periode == this.form.periode && this.penilaianDetails[index].penilaian.pernum == this.form.pernum){
+                    this.listNilai[j] = this.penilaianDetails[index];
+                    j++;
+                    
+                }
+            }
+        },
+        checkPenilaian(){
+            var exist = this.penilaians.some(penilaian => penilaian.tim_unit_id == this.form.tim_unit_id && penilaian.pernum == this.form.pernum && penilaian.periode == this.form.periode);
+            return exist;
         },
 
         getPeriode(){
             var date = new Date();
-            var batas_awal = date.getMonth()-2;
+            var batas_awal;
             var batas_akhir = date.getMonth();
             var counter = 0;
             var x=0;
+
+            for (let i = 0; i < this.month.length; i++) {
+                this.month[i].index = i;
+                
+            }
             
-            for(batas_awal = date.getMonth()-2;batas_awal<=batas_akhir;batas_awal++){
+            for(batas_awal = date.getMonth()-1;batas_awal<=batas_akhir;batas_awal++){
                 if(batas_awal < 0){
                     counter = 12 + batas_awal;
                     this.periode_bulan[x] = this.month[counter];
                     this.periode_bulan[x].index = counter;
-                    x++
+                    x++;
                 }
                 else{
                     this.periode_bulan[x] = this.month[batas_awal];
@@ -318,6 +443,7 @@ export default {
             this.member = karyawan.nama
             this.form.pernum = karyawan.pernum;
             this.memberList = [];
+            this.getPenilaianTim(karyawan.pernum);
         },
 
         closeModal() {

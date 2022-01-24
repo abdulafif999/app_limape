@@ -31,24 +31,13 @@
     <apexcharts
       ref="chart"
       :width="penilaianChart.width"
-      height="300"
+      height="1000"
       :type="penilaianChart.type"
       :options="penilaianChart.options"
-      :series="penilaianChart.series">
+      :series="penilaianChart.series"
+      :key="penilaianChart.options">
     </apexcharts>
   </div>
-  <div v-bind:key="value.peringkat">
-    <div v-if="value.peringkat != '' ">
-      <div class="py-5 text-black">
-          Peringkat {{this.form.timUnit}} = {{this.value.peringkat}}
-      </div>
-    </div>
-  </div>
-  <div>
-      <jet-button class="mt-2 w-1/4" @click="fillData()">
-          Lihat
-      </jet-button>                            
-  </div>   
 </template>
 
 <script>
@@ -111,7 +100,6 @@ export default {
 
         for(var h=0;h < this.timList.length;h++){
 
-            this.list.listTim[h] = this.timList[h].nama
             var nilai_final = 0;
             var total = [];
             var kategori= [];
@@ -177,8 +165,6 @@ export default {
                     
                     for(var a = 0;a < this.indexKriterias.length; a++){
                         if(this.indexKriterias[a].sub_kriteria == ''){
-
-                            
                             total_array[w] = 0;
                             var periode_awal = new Date(this.indexKriterias[a].periode_awal);
                             var periode_akhir = new Date(this.indexKriterias[a].periode_akhir);
@@ -222,23 +208,85 @@ export default {
         this.addRanking();
       },
       addRanking(){
+        this.list.series[0].data = []
         var tempObject = '';
-            for(var i = 0; i < this.list.series[0].data.length;i++){
-                for(var j=i+1;j<this.list.series[0].data.length;j++){
-                    if(this.list.series[0].data[j] >= this.list.series[0].data[i]){
-                        tempObject = this.list.series[0].data[j];
-                        this.list.series[0].data[j] = this.list.series[0].data[i];
-                        this.list.series[0].data[i] = tempObject;
+            for(var i = 0; i < this.list.daftarTim.length;i++){
+                for(var j=i+1;j<this.list.daftarTim.length;j++){
+                    if(this.list.daftarTim[j].nilai_final >= this.list.daftarTim[i].nilai_final){
+                        tempObject = this.list.daftarTim[j];
+                        this.list.daftarTim[j] = this.list.daftarTim[i];
+                        this.list.daftarTim[i] = tempObject;
                     }
                 }
-            }    
+              this.list.listTim[i] = this.list.daftarTim[i].nama;
+              this.list.series[0].data[i] = this.list.daftarTim[i].nilai_final;
+              if(this.list.series[0].data[i] == ''){
+                this.list.series[0].data[i] = null;
+              }
+            }
+            
+
       },
     fillData(){
       this.getRanking();
       this.penilaianChart.options = {
         chart: {
               type: 'bar',
-              height: 350
+              height: 1000,
+              toolbar:{
+                    show:true,
+                    offsetX: 0,
+                    offsetY: 0,
+                    tools: {
+                      download: true,
+                      selection: true,
+                      zoom: true,
+                      zoomin: true,
+                      zoomout: true,
+                      pan: true,
+                      reset: true,
+                      customIcons: []
+                    },
+                },
+                animations:{
+                    enabled:true,
+                },
+                zoom: {
+                    enabled: true,
+                    type: 'x',  
+                    autoScaleYaxis: false,  
+                    zoomedArea: {
+                        fill: {
+                        color: '#90CAF9',
+                        opacity: 0.4
+                        },
+                        stroke: {
+                        color: '#0D47A1',
+                        opacity: 0.4,
+                        width: 1
+                        }
+                    }
+                },
+            },
+            fill: {
+              colors: [function({ value, seriesIndex, w }) {
+                if(value > 0 && value <= 20) {
+                  // hitam
+                    return '#000000'
+                } else if (value > 20 && value <= 40) {
+                  // merah
+                    return '#FF0000'
+                }else if (value > 40 && value <= 60) {
+                  // kuning
+                    return '#FFD700'
+                }else if (value > 60 && value <= 80) {
+                  // biru
+                    return '#0000FF'
+                }else {
+                  // hijau
+                    return '#2ca01e'
+                }
+              }],
             },
             plotOptions: {
               bar: {
@@ -260,7 +308,6 @@ export default {
             },
             legend:{
                 show:true,
-                showForSingleSeries: true,
                 showForNullSeries: true,
                 showForZeroSeries: true,
                 toggleDataSeries: true,
@@ -272,7 +319,6 @@ export default {
             
       }
       this.penilaianChart.series[0].data = this.list.series[0].data
-      this.penilaianChart.series[0].name = this.form.kriteria
       this.renderChart(this.penilaianChart.options, this.penilaianChart.series);
 
     },
@@ -282,6 +328,7 @@ export default {
       chartQuarter.updateOptions(options);
       chartQuarter.updateSeries(series);
       chartQuarter.render();          
+      chartQuarter.zoomX(1, 10);
     },
 
     getPeringkat(){

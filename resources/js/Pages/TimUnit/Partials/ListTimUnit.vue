@@ -10,6 +10,10 @@
                                 <tr>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        No 
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nama Tim
                                     </th>
                                     <th scope="col"
@@ -33,7 +37,12 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="tim in showTim" :key="tim.id">
+                                <tr v-for="(tim, index) in showTim" :key="tim.id">
+                                    <td class="px-6 py-4 border-r-2 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            {{ index+1 }}
+                                        </div>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             {{ tim.nama }}

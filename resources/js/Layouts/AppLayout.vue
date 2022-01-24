@@ -33,7 +33,7 @@
                                             Dashboard
                                         </jet-nav-link>
 
-                                        <jet-nav-link :href="route('penilaian.index')" :active="route().current('penilaian.*')" class="text-base font-medium text-gray-500 hover:text-gray-900">
+                                        <jet-nav-link :href="route('penilaian.index')" :active="route().current('penilaian.*')" v-if="showPenilaian" class="text-base font-medium text-gray-500 hover:text-gray-900">
                                             Penilaian
                                         </jet-nav-link>
 
@@ -501,19 +501,12 @@
         icon: ChartBarIcon,
         if:viewAny,
     },
-    {
-        name: 'Rank Penilaian',
-        description: 'Detail rank masing-masing kriteria dan penjelasannya',
-        href: route('nilai.index'), 
-        active:route().current('nilai.*'),
-        icon: ChartBarIcon,
-        if:viewAny,
-    },
     ]
 
     export default defineComponent({
         props: {
             title: String,
+            showPenilaian:Boolean,
         },
 
         components: {
@@ -560,6 +553,7 @@
             logout() {
                 this.$inertia.post(route('logout'));
             },
+            
         }
     })
 </script>

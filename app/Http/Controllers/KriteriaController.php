@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kriteria;
+use App\Models\Nilai;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,8 +21,12 @@ class KriteriaController extends Controller
     }    
     public function index()
     {
+        $nilai = Nilai::with('kriteria')->get();
         $data = Kriteria::orderBy('nama', 'asc')->orderBy('sub_kriteria', 'asc')->get();
-        return Inertia::render('Kriteria/Index', ['kriterias' => $data]);
+        return Inertia::render('Kriteria/Index', [
+            'kriterias' => $data,
+            'nilais' => $nilai,
+        ]);
     }
 
     /**

@@ -29,7 +29,7 @@ class TimController extends Controller
         $data = Tim::all();
         $karyawans = Karyawan::whereNotIn('nip', $pernum)->get();
         
-        $timUnits = TimUnit::all();
+        $timUnits = TimUnit::orderBy('nama', 'asc')->get();
         $dataTim = TimDetail::with('tim','karyawan')->get();
         $penilaianTim = PenilaianTim::with('tim','timUnit')->get();
         return Inertia::render('Tim/Index', [

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Charts\BarChart;
+use App\Charts\LineChart;
 use App\Charts\NilaiChart;
 use App\Charts\RankingChart;
 use App\Models\Dashboard;
@@ -26,17 +27,21 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(NilaiChart $penilaianChart, RankingChart $rankingChart)
+public function index(NilaiChart $penilaianChart, LineChart $rankingChart)
     {
         $penilaianDetail = PenilaianDetail::with('kriteria', 'penilaian')->get();
         $penilaian = Penilaian::with('karyawan', 'timUnit')->get();
+        $approved = Penilaian::where('approve', '=' , true)->with('karyawan', 'timUnit')->get();
         $timUnit = UnitDetail::with('timUnit', 'karyawan')->get();
         $tim = TimDetail::with('karyawan', 'tim')->get();
-        $timlist = TimUnit::all();
+        $timlist = TimUnit::orderBy('nama', 'asc')->get();
+        $timPenilai = Tim::all();
         $penilaianTim = PenilaianTim::with('tim', 'timUnit')->get();
         $indexKriterias = IndexKriteria::all();
         $kategoriHasil = KategoriHasil::all();
         $user = Auth::user()->pernum;
+        $role = Auth::user()->role;
+        
 
         return Inertia::render('Dashboard', [
             'penilaians' => $penilaian,
@@ -45,11 +50,14 @@ class DashboardController extends Controller
             'tims' => $tim,
             'timUnits' => $timUnit,
             'timList' => $timlist,
+            'timPenilai' => $timPenilai,
             'penilaianTims' => $penilaianTim,
             'indexKriterias' => $indexKriterias,
             'rankingChart' => $rankingChart->build(),
             'kategoriHasil' => $kategoriHasil,
             'currentUser' => $user,
+            'role' => $role,
+            'approvedPenilaians' => $approved,
 
         ]);
     }

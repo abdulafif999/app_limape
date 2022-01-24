@@ -20,7 +20,7 @@ class KaryawanController extends Controller
     }    
     public function index(Request $request)
     {
-        $data = Karyawan::when($request->term, function($query, $term){
+        $data = Karyawan::orderBy('nama', 'asc')->when($request->term, function($query, $term){
             $query->where('nama', 'LIKE', '%'.$term.'%' );
         })->paginate(20);
         return Inertia::render('Karyawan/Index', ['karyawans' => $data]);

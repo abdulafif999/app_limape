@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="flex flex-col">
-            <div class="-my-2 overflow-x-auto sm:-mx-2 lg:-mx-2">
-                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div class="px-my-2 overflow-x-auto sm:-mx-2 lg:-mx-2">
+                <div class="py-2 align-middle inline-block min-w-full lg:px-2">
                     <div class="overflow-hidden border-b">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200" v-show="form.listNilai">
                             <thead class="bg-white">
                                 <tr>                                  
                                     <th scope="col"
@@ -18,7 +18,11 @@
                                     <th scope="col"
                                         class="px-2 py-2 text-left text-xs font-light text-black uppercase tracking-wider">
                                         Periode
-                                    </th>                                 
+                                    </th>
+                                    <th scope="col"
+                                        class="px-2 py-2 text-left text-xs font-light text-black uppercase tracking-wider">
+                                        Status
+                                    </th>                          
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -38,6 +42,11 @@
                                             {{ penilaian.bulan }}/{{penilaian.tahun}}
                                         </div>
                                     </td>  
+                                    <td class="px-2 py-2 whitespace-nowrap" :class="{ 'text-green-700' :penilaian.approve == 1, 'text-red-600' :penilaian.approve == 0 }">
+                                        <div class="flex items-center">
+                                            {{ penilaian.status}}
+                                        </div>
+                                    </td>
                                 </tr>
 
                                 <!-- More people... -->
@@ -78,6 +87,11 @@ export default{
                     this.form.listNilai[i].tgl = this.penilaians[index].tgl;
                     this.form.listNilai[i].bulan = periode.getMonth()+1;
                     this.form.listNilai[i].tahun = periode.getFullYear();
+                    if(this.penilaians[index].approve == true){
+                        this.form.listNilai[i].status = 'Sudah di Approve';
+                    }else{
+                        this.form.listNilai[i].status = 'Belum di Approve'
+                    }
                     
                     i++;
                 }

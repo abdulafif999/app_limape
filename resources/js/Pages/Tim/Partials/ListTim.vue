@@ -313,7 +313,10 @@
                 <h2 class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                     <green-button @click="tambahTim(this.selectedTim)" class="w-1/4">Tambah Tim</green-button>
                 </h2>
-                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <div class="flex flex-col">
+                    <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -353,7 +356,9 @@
                                 <!-- More people... -->
                             </tbody>
                         </table>
-
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </template>
 
@@ -389,7 +394,7 @@
                                         >
                                         
                                         <option value="" disabled selected>Select Tim</option>
-                                        <option v-for="tim in timUnits" :key="tim.id" :value="tim.id">{{tim.nama}} - {{tim.unit}}</option>
+                                        <option v-for="tim in timUnits" :key="tim.id" :value="tim.id">{{tim.nama}}</option>
                                     </select>
 
                                     <jet-input-error :message="form3.errors.tim_unit_id" class="mt-2" />
@@ -546,6 +551,20 @@ export default {
                 tim_id:'',
                 tim_unit_id:'',
             }),
+        }
+    },
+
+    computed: {
+        sortedArray: function() {
+        function compare(a, b) {
+            if (a.name < b.name)
+            return -1;
+            if (a.name > b.name)
+            return 1;
+            return 0;
+        }
+
+            return this.arrays.sort(compare);
         }
     },
 

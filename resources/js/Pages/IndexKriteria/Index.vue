@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Index Kriteria">
+    <app-layout title="Index Kriteria" :showPenilaian="true">
         <template #header>
             <h2 class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                 Kriteria

@@ -1,5 +1,5 @@
 <template>
-    <app-Layout>
+    <app-Layout :showPenilaian="true">
         <template #header>
             <h2 class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                 Detail Penilaian
@@ -51,7 +51,7 @@
                                             <div v-for="item in kriteria1" :key="item.id" class="text-red-600 mb-4">
                                             <div v-if="item === null"> Tidak ada Kriteria </div>
                                             <label class="bg-red border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
+                                                <input type="number" max="100" min="0" class="mt-1 block w-1/12" placeholder="Nilai"
                                                 ref="nilai"
                                                 v-model="form.nilai[item.kriteriaIndex]"
                                                 @keyup.enter="create"
@@ -97,7 +97,7 @@
                                             <div v-for="item in kriteria2" :key="item.id" class="text-blue-700  mb-4">
                                                 <div v-if="item === null"> Tidak ada Kriteria</div>
                                                 <label class="bg-white border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
+                                                <input max="100" min="0" type="number" class="mt-1 block w-1/12" placeholder="Nilai"
                                                     ref="nilai"
                                                     v-model="form.nilai[item.kriteriaIndex]"
                                                     @keyup.enter="create" />
@@ -142,7 +142,7 @@
                                             <div v-for="item in kriteria3" :key="item.id" class="text-yellow-700 mb-4">
                                                 <div v-if="item === null"> Tidak ada Kriteria   </div>
                                                 <label class="bg-white border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
+                                                <input max="100" min="0" type="number" class="mt-1 block w-1/12" placeholder="Nilai"
                                                     ref="nilai"
                                                     v-model="form.nilai[item.kriteriaIndex]"
                                                     @keyup.enter="create" />
@@ -186,7 +186,7 @@
                                             <div v-for="item in kriteria4" :key="item.id" class="text-green-600 mb-4">
                                                 <div v-if="item === null"> Tidak ada Kriteria   </div>
                                                 <label class="bg-white border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
+                                                <input max="100" min="0" type="number" class="mt-1 block w-1/12" placeholder="Nilai"
                                                     ref="nilai"
                                                     v-model="form.nilai[item.kriteriaIndex]"
                                                     @keyup.enter="create" />
@@ -231,7 +231,7 @@
                                             <div v-for="item in kriteria5" :key="item.id" class="text-pink-600 mb-4">
                                                 <div v-if="item === null"> Tidak ada Kriteria   </div>
                                                 <label class="bg-white border-black">{{item.nama}} - {{item.sub_kriteria}}</label>
-                                                <jet-input type="text" class="mt-1 block w-1/12" placeholder="Nilai"
+                                                <input max="100" min="0" type="number" class="mt-1 block w-1/12" placeholder="Nilai"
                                                     ref="nilai"
                                                     v-model="form.nilai[item.kriteriaIndex]"
                                                     @keyup.enter="create" />

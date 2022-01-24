@@ -35,8 +35,8 @@
                     <select class="block w-10/12 py-2 border text-left border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                         v-model="form.kategori" >
                         <option value="" disabled selected>Pilih Kategori</option>
-                        <option value="Operasional">Operasional</option>
-                        <option value="Non-Operasional">Non-Operasional</option>
+                        <option value="Pabrik">Pabrik</option>
+                        <option value="Non Pabrik">Non Pabrik</option>
                     </select>
 
                     <jet-input-error :message="form.errors.kategori" class="mt-2" />

@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Kriteria">
+    <app-layout title="Kriteria" :showPenilaian="true">
         <template #header>
             <h2 class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                 Kriteria
@@ -9,7 +9,7 @@
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <list-Kriteria :kriterias="kriterias" />
+                <list-Kriteria :kriterias="kriterias" :nilais="nilais" />
             </div>
         </div>
     </app-layout>
@@ -30,7 +30,8 @@
             
         },
         props: {
-            kriterias: Array
+            kriterias: Array,
+            nilais:Array,
         }
     })
 </script>

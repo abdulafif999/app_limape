@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Kategori Hasil">
+    <app-layout title="Kategori Hasil" :showPenilaian="true">
         <template #header>
             <h2 class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                 Kategori Hasil

@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="UnitDetail">
+    <app-layout title="UnitDetail" :showPenilaian="true">
         <template #header>
             <h2 class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                 Tim Unit

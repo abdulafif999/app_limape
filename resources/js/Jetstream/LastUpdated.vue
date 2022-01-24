@@ -4,43 +4,25 @@
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div class="overflow-hidden border-b">
-                        <table class="min-w-full divide-y divide-gray-200" :v-on:show="getTimPenilai()">
+                        <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-white">
-                                <tr>
+                                <tr>                                
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                                        Nama Tim
-                                    </th>                                    
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                                        Nama Penilai
-                                    </th>                                   
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
+                                        class="px-2 py-2 text-left text-xs font-medium text-black uppercase tracking-wider">
                                         Tim 5P/Unit yg Dinilai
                                     </th>                                    
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-light text-black uppercase tracking-wider">
+                                        class="px-2 py-2 text-left text-xs font-light text-black uppercase tracking-wider">
                                         Tanggal Penilaian
                                     </th>
-                                    <th scope="col" class="relative px-6 py-3 text-left text-xs font-light text-black uppercase tracking-wider">
+                                    <th scope="col" class="relative px-2 py-2 text-left text-xs font-light text-black uppercase tracking-wider">
                                         Hasil Penilaian
                                     </th> 
 
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 scroll">
-                                <tr v-for="penilaian in penilaians.slice().reverse()" :key="penilaian.id">
-                                    <td class="px-2 py-2 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            {{ penilaian.nama_tim }}
-                                        </div>
-                                    </td>                                    
-                                    <td class="px-2 py-2 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            {{ penilaian.karyawan.nama }}
-                                        </div>
-                                    </td>
+                                <tr v-for="penilaian in penilaians.slice(0, 20).reverse()" :key="penilaian.id">
                                     <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
                                             {{ penilaian.tim_unit.nama }}
@@ -233,15 +215,6 @@ export default{
                 }
             }
             this.nilaiTotal = parseFloat((nilaiTotal).toFixed(2));
-        },
-        getTimPenilai(){
-            for(var index=0;index<=this.penilaians.length-1;index++){
-                for(var j=0;j<=this.tims.length-1;j++){
-                    if(this.penilaians[index].pernum == this.tims[j].karyawan.pernum){
-                        this.penilaians[index].nama_tim = this.tims[j].tim.nama;
-                    }
-                }
-            }
         },
         closeModal(){
             this.showModal = false;

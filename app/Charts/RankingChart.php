@@ -15,13 +15,11 @@ class RankingChart
 
     public function build(): array
     {
-        return $this->chart->barChart()
+        return $this->chart->lineChart()
             ->setTitle('')
             ->setSubtitle('')
-            ->addData('Nilai 5P/Unit', [])
-            ->setXAxis([''])
-            ->setColors(['#ffc63b', '#ff6384'])
-            ->setMarkers(['#FF5722'], 7, 10)
+            ->addData('', [])
+            ->setXAxis(['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'])
             ->toVue();
     }
 }

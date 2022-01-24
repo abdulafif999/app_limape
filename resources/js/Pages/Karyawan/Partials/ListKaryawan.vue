@@ -124,11 +124,12 @@
                                         <div class="flex items-center">
                                             {{ karyawan.email }}
                                         </div>
-                                    </td>                                                                                                                                                         
+                                    </td>
+                                                                                                                                                                                        
                                 </tr>
-
                                 <!-- More people... -->
                             </tbody>
+                            
                         </table>
                         <pagination class="mt-6" :links="karyawans.links" />
                     </div>

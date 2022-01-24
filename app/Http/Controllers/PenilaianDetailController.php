@@ -78,7 +78,6 @@ class PenilaianDetailController extends Controller
         $status = $request->status;
         $rekomendasi = $request->rekomendasi;
         $n = 0;
-        if($pernum == $request->pernum){
             foreach ($kriteria as $row) {
                 PenilaianDetail::create([
                     'penilaian_id' => $penilaian,
@@ -90,8 +89,7 @@ class PenilaianDetailController extends Controller
                 ]);
                 $n++;
             }
-        }
-        return redirect()->route('penilaian.index');
+        return redirect()->route('penilaian.index')->with('message', 'Data Berhasil Ditambah.');;
     }
 
     /**
