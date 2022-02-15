@@ -1,16 +1,16 @@
 <template>
     <div>
         <div class="bg-white text-left justify-center text-gray-600 capitalize h-12 border" v-if="$page.props.user.role=='user'">
-            <label class="h-10">
-                List Penilaian Yang Belum di Approve
+            <label class="h-10 uppercase text-lg block bold font-bold">
+                List Penilaian Yang Belum di Finalisasi
             </label>
         </div>
         <!-- This example requires Tailwind CSS v2.0+ -->
-        <div class="flex flex-col" v-if="data.dataPenilaian" :v-bind="data.dataPenilaian">
+        <div class="flex flex-col" :v-bind="data.dataPenilaian">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="min-w-min divide-y divide-gray-200 mb-5 border-black table table-bordered" style="width:100%">
                             <tr class="mb-3 border-b-2">                                
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -21,7 +21,7 @@
                                         
                                     </th>                          
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         
                                     </th>
                                     <th scope="col"
@@ -64,7 +64,7 @@
                                                     v-model="bulan" @change="setPeriode()">
                                                     <option value="" selected disabled>Pilih Bulan</option>
                                                     <option value="" selected>Semua</option>
-                                                    <option v-for="bulan in month" :key="bulan.index" :value="bulan.index+1">{{bulan.nama}}</option>
+                                                    <option v-for="bulan in month" :key="bulan.index" :value="bulan.index">{{bulan.nama}}</option>
                                                 </select>     
                                                 <select class="block py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                                     v-model="tahun" >
@@ -76,9 +76,7 @@
                                     </th>
                                     <th scope="col"
                                         class="py-3 text-left text-xs font-medium text-gray-500 uppercase">>
-                                        <div v-if="showApproval == true">
-                                            <approval :role="role" :tims="tims" :pernum="pernum" :penilaianTims="penilaianTims" :indexKriterias="indexKriterias" :penilaianDetails="penilaianDetails" />
-                                        </div>
+                                        <approval :role="role" :tims="tims" :pernum="pernum" :penilaianTims="penilaianTims" :indexKriterias="indexKriterias" :penilaianDetails="penilaianDetails" :kriterias="kriterias" />
                                     </th>
                                                                       
                                 </tr>
@@ -96,7 +94,7 @@
                                         Nama Tim
                                     </th>                                    
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nama Penilai
                                     </th>                                   
                                     <th scope="col"
@@ -122,7 +120,14 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="(penilaian, index) in data.dataPenilaian.slice().reverse()" :key="penilaian.id">
+                                <tr v-if="data.dataPenilaian < 1">
+                                    <td class="px-6 py-4 whitespace-nowrap border-r-2" colspan="8">
+                                            <div class="flex items-center text-center">
+                                                Tidak Ada Penilaian
+                                            </div>
+                                    </td> 
+                                </tr>
+                                <tr v-for="(penilaian, index) in displayedPosts" :key="penilaian.id">
                                         <td class="px-6 py-4 whitespace-nowrap border-r-2">
                                             <div class="flex items-center">
                                                 {{ index+1 }}
@@ -133,7 +138,7 @@
                                                 {{ penilaian.nama_tim }}
                                             </div>
                                         </td> 
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-2 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 {{ penilaian.karyawan.nama }}
                                             </div>
@@ -150,12 +155,15 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                {{ penilaian.bulan }}/{{penilaian.tahun}}
+                                                {{new Date(penilaian.periode).getMonth()+1 }}/{{new Date(penilaian.periode).getFullYear()}}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap" v-if="$page.props.user.role=='admin'" :class="{ 'text-green-700' :penilaian.approve == 1, 'text-red-600' :penilaian.approve == 0 }">
-                                            <div class="flex items-center">
-                                                {{ penilaian.status}}
+                                        <td class="px-6 py-4 whitespace-nowrap" v-if="$page.props.user.role=='admin'">
+                                            <div class="flex items-center text-green-600" v-if="penilaian.approve == true">
+                                                Sudah difinalisasi
+                                            </div>
+                                            <div class="flex items-center text-red-600" v-if="penilaian.approve == false">
+                                                Belum difinalisasi
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right flex text-sm font-medium">
@@ -166,10 +174,33 @@
                                 <!-- More people... -->
                             </tbody>
                         </table>
+                        <div class="justify-center object-center items-center content-center">
+                            <nav class="pagination">
+                                <ul class="flex">
+                                    <li class="page-item px-2">
+                                        <button class="page-link" v-if="page != 1" @click="page = 1" > First </button>
+                                    </li>
+                                    <li class="page-item px-2">
+                                        <button class="page-link" v-if="page != 1" @click="page--" > Previous </button>
+                                    </li>
+                                    <li class="page-item px-2">
+                                        <button class="page-link" v-for="pageNumber in pages.slice(page-1, page+5)" :key="pageNumber" @click="page = pageNumber" :class="{'focus:ring-offset-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2': page==pageNumber}"> {{pageNumber}} </button>
+                                    </li>
+                                    <li class="page-item px-2">
+                                        <button @click="page++" v-if="page < pages.length" class="page-link"> Next </button>
+                                    </li>
+                                    <li class="page-item px-2">
+                                        <button class="page-link" v-if="page < pages.length"  @click="page = pages.length" > Last </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>  
+        </div>
+                
+
 
         <jet-dialog-modal :show="detailNilai" @close="closeModal" :max-width="maxWidth">
             <template #title>
@@ -232,12 +263,12 @@
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
+                                                <div class="py-3 text-left text-xs tracking-wider options" style="vertical-align:middle">
                                                     {{ penilaian.status }}
                                                 </div>
                                             </td>                                             
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
+                                                <div class="py-3 text-left text-xs tracking-wider options" style="vertical-align:middle">
                                                     {{ penilaian.rekomendasi }}
                                                 </div>
                                             </td>
@@ -248,7 +279,7 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
-                                                    <span><jet-button v-if="$page.props.user.pernum == penilaian.penilaian.pernum && $page.props.user.role == 'user'" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
+                                                    <span><jet-button v-if="$page.props.user.pernum == penilaian.penilaian.pernum && $page.props.user.role == 'user' && new Date(penilaian.penilaian.periode).getMonth() == setBulan(1) || new Date(penilaian.penilaian.periode).getMonth() == new Date(today).getMonth()" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
                                                     <span><jet-button v-if="$page.props.user.role == 'admin'" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
                                                 </div>
                                             </td>                                                            
@@ -294,9 +325,9 @@
                     <jet-input type="text" class="mt-1 block w-3/4" placeholder="Nilai Atas"
                                 ref="nilai_atas"
                                 v-model="edit.nilai"
-                                @keyup.enter="create" />
+                                @keyup.enter="update" />
 
-                    <jet-input-error :message="form.errors.nilai_atas" class="mt-2" />                    
+                    <jet-input-error :message="edit.errors.nilai" class="mt-2" />                    
                     <textarea class="flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                 placeholder="Keterangan"
                                 ref="keterangan"
@@ -304,8 +335,9 @@
                                 rows="4"
                                 cols="50">
                     </textarea>
+                    
 
-                    <jet-input-error :message="form.errors.nilai_bawah" class="mt-2" />                    
+                    <jet-input-error :message="edit.errors.status" class="mt-2" />                    
                     <textarea class="flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                 placeholder="Rekomendasi"
                                 ref="rekomendasi"
@@ -313,13 +345,14 @@
                                 rows="4"
                                 cols="50">
                     </textarea>
+                    <jet-input-error :message="edit.errors.rekomendasi" class="mt-2" />                    
                     <input type="file"
                         ref="foto"
                         @change="updateFotoPreview()"
                         disabled > <label class="text-red-500">Fitur ini akan hadir segera</label>
 
                     <jet-label for="foto" value="Foto" />                                            
-                    <jet-input-error :message="form.errors.foto" class="mt-2" />                                
+                    <jet-input-error :message="edit.errors.foto" class="mt-2" />                                
 
                     <div v-show="preview">
                         <span class="block w-20 h-20 rounded-full"
@@ -335,7 +368,7 @@
                         Cancel
                     </jet-secondary-button>
 
-                    <jet-button class="ml-2" @click="update" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    <jet-button class="ml-2" @click="update" :class="{ 'opacity-25': edit.processing }" :disabled="edit.processing">
                         Edit
                     </jet-button>
                 </div>
@@ -357,6 +390,7 @@ import JetCheckbox from '@/Jetstream/Checkbox.vue'
 import {TabsWrapper, TabsContent, Tab} from '@ocrv/vue-tailwind-tabs'
 import Approval from './Approval.vue'
 import Pagination from '@/Jetstream/Pagination'
+import SlidingPagination from 'vue-sliding-pagination'
 
 
 export default {
@@ -373,6 +407,9 @@ export default {
         Tab,
         Approval,
         Pagination,
+        SlidingPagination,
+        BlueButton,
+        BlueButton,
 
     },
 
@@ -390,10 +427,21 @@ export default {
         penilaianTims:Array,
         indexKriterias:Array,
     },
-    mounted(){
-        this.getData();        
-        
+    computed:{
+        displayedPosts:function() {
+			return this.paginate(this.data.dataPenilaian);
+		}
     },
+    watch: {
+		posts () {
+			this.setPages();
+		}
+	},
+	created(){        
+		this.getData();
+        this.setPages();
+        
+	},
 
     data() {
         return {
@@ -407,7 +455,13 @@ export default {
             maxWidth:'2md',
             preview:'',
             bulan:'',
-            tahun:2021,
+            page: 1,
+			perPage: 10,
+            tahun:2022,
+            today:'',
+            TimPenilai:{},
+            
+			pages: [],
 
 
             
@@ -481,43 +535,61 @@ export default {
                 }
             }
             this.nilaiTotal = parseFloat((nilaiTotal).toFixed(2));
+            var date = new Date();
+            var output = '';
+            if(date.getMonth() < 9 && date.getMonth()>=0){
+                var output = date.getFullYear() + '-' + '0' + (date.getMonth() + 1) + '-' + '01';
+            }else if(date.getMonth() >= 9){
+                var output = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01';
+            }
+            this.today = output;
+
+        },
+        setBulan(decrement){
+            var date = new Date();
+            var x = date.getMonth()-decrement;
+            if(x < 0){
+                x = 12-decrement;
+            }
+            return x;
         },
         getData(){
+            this.getTimObject();
             var x = 0;
             if(this.role == 'admin'){
-                this.data.dataPenilaian = this.penilaians
-                for(var k=0;k<this.penilaians.length;k++){
-                    var period = new Date(this.penilaians[k].periode)
-                    this.data.dataPenilaian[k].bulan = period.getMonth()+1;
-                    this.data.dataPenilaian[k].tahun = period.getFullYear();
-                    if(this.penilaians[k].approve == true){
-                        this.data.dataPenilaian[k].status = 'Sudah di Approve';
-                    }else{
-                        this.data.dataPenilaian[k].status = 'Belum di Approve'
-                    }
-                }
+                this.data.dataPenilaian = this.penilaians;
+                this.getTimPenilai();
             }
             else if(this.role == 'user'){
-                for(var i=0;i<this.tims.length;i++){
-                    if(this.tims[i].karyawan.pernum == this.pernum){
-                        for(var index=0;index<this.penilaians.length;index++){
-                            for(var j=0;j<this.tims.length;j++){
-                                if(this.tims[j].tim_id == this.tims[i].tim_id){
-                                    if(this.tims[j].karyawan.pernum == this.penilaians[index].pernum && this.penilaians[index].approve == false){
-                                            var period = new Date(this.penilaians[index].periode)
-                                            this.data.dataPenilaian[x] = this.penilaians[index];
-                                            this.data.dataPenilaian[x].bulan = period.getMonth()+1;
-                                            this.data.dataPenilaian[x].tahun = period.getFullYear();
-                                            this.data.dataPenilaian[x].nama_tim = this.tims[j].tim.nama
-                                            x++;
-                                    }
-                                }
+                for(var index=0;index<this.penilaians.length;index++){
+                    for(var j=0;j<this.tims.length;j++){
+                        if(this.tims[j].tim_id == this.TimPenilai.tim_id){
+                            if(this.tims[j].karyawan.pernum == this.penilaians[index].pernum && this.penilaians[index].approve == false){
+                                this.data.dataPenilaian[x] = this.penilaians[index];
+                                x++;
                             }
                         }
                     }
                 }
+                this.getTim();
             }
-            this.getTimPenilai();
+            
+        },
+        getTimObject(){
+            for (let index = 0; index < this.tims.length; index++) {
+                if(this.tims[index].karyawan.pernum == this.pernum){
+                    this.TimPenilai = this.tims[index];
+                }
+                
+            }
+            for(var i =0;i<this.month.length;i++){
+                this.month[i].index = i;
+            }
+            if(this.periode != null){
+                var date = new Date(this.periode);
+                this.bulan = date.getMonth();
+                this.tahun = date.getFullYear();
+            }
         },
         
 
@@ -525,18 +597,10 @@ export default {
             for(var index=0;index<=this.penilaians.length-1;index++){
                 for(var j=0;j<=this.tims.length-1;j++){
                     if(this.penilaians[index].pernum == this.tims[j].karyawan.pernum){
-                        var period = new Date(this.penilaians[index].periode)
                         this.penilaians[index].nama_tim = this.tims[j].tim.nama;
-                        this.penilaians[index].bulan = period.getMonth()+1;
-                        this.penilaians[index].tahun = period.getFullYear();
                     }
                 }
             }
-            for(var i =0;i<this.month.length;i++){
-                this.month[i].index = i;
-            }
-            this.getKetua();
-            
         },
     
         editConfirmation(penilaian){        
@@ -576,14 +640,14 @@ export default {
         },
 
         setPeriode(){
-            if(this.bulan < 10 && this.bulan>=1){
-                var output = this.tahun + '-' + '0' + this.bulan + '-' + '01';
-            }else if(this.bulan >= 10){
-                var output = this.tahun + '-' + this.bulan + '-' + '01';
+            if(this.bulan < 9 && this.bulan>=0){
+                var output = this.tahun + '-' + '0' + (this.bulan+1) + '-' + '01';
+            }else if(this.bulan >= 9){
+                var output = this.tahun + '-' + (this.bulan+1) + '-' + '01';
             }
             this.form.periode = output;
             this.searchPeriode();
-      },
+        },
 
         closeModal() {
             this.detailNilai = false;
@@ -610,38 +674,136 @@ export default {
                 this.getData();
             }
         },
-        getKetua(){
-            if(this.role == 'admin'){
-                this.showApproval = true;
-            }
-            else{
-                for (let index = 0; index < this.tims.length; index++) {
-                    if(this.pernum == this.tims[index].karyawan.pernum && this.tims[index].posisi == 'Ketua'){
-                        this.showApproval = true;
-                    }
-                    
-                }
-            }
-            this.getTim();
-        },
-
         getTim(){
             var x=0;
-            for (let i = 0; i < this.penilaianTims.length; i++) {
-                for (let j = 0; j < this.tims.length; j++) {
-                    if(this.tims[j].karyawan.pernum == this.pernum){
-                        if(this.penilaianTims[i].tim_id == this.tims[j].tim_id){
-                            this.tim_yg_dinilai[x] = this.penilaianTims[i];
-                            x++;
+            if(this.role=='user'){
+                for (let i = 0; i < this.penilaianTims.length; i++) {
+                    for (let j = 0; j < this.tims.length; j++) {
+                        if(this.tims[j].karyawan.pernum == this.pernum){
+                            if(this.penilaianTims[i].tim_id == this.tims[j].tim_id){
+                                this.tim_yg_dinilai[x] = this.penilaianTims[i];
+                                x++;
+                            }
                         }
+                        
                     }
-                    
                 }
             }
         },
+		setPages () {
+			let numberOfPages = Math.ceil(this.data.dataPenilaian.length / this.perPage);
+			for (let index = 1; index <= numberOfPages; index++) {
+				this.pages.push(index);
+			}
+		},
+		paginate (posts) {
+			let page = this.page;
+			let perPage = this.perPage;
+			let from = (page * perPage) - perPage;
+			let to = (page * perPage);
+			return  posts.slice(from, to);
+		}
+
     },
+    filters: {
+		trimWords(value){
+			return value.split(" ").splice(0,20).join(" ") + '...';
+		}
+	}
 }
 </script>
+
+<style scoped>
+
+
+    .options{
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: inherit;
+    }
+    .table{
+        font-size: 13px;        
+        box-sizing: border-box;
+        padding: 0;
+        -webkit-box-sizing: border-box;
+        width: 100%;
+        margin: 0 auto;
+        clear: both;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .table-bordered{
+        border: 1px solid #f4f4f4;
+        overflow-x: hidden;
+        overflow-y: auto;
+        font-family: "Poppins", sans-serif;
+        font-weight: 400;
+        line-height: 1.625;
+        color: #666;
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+    }
+    .page-link {
+	    display: inline-block;
+    }
+    .page-link {
+        font-size: 20px;
+        color: #29b3ed;
+        font-weight: 500;
+    }
+    .offset{
+        width: 1000px !important;
+        margin: 20px auto;  
+    }
+
+    .pagination {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+    .page-link:not(:disabled):not(.disabled) {
+        cursor: pointer;
+    }
+    button{
+        background: #d1e5fa;
+        margin: .25rem;
+        padding: .25rem .5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        position: relative;
+        display: block;
+        color: #65a2e9;
+    }
+    li {
+        display: inline-block;
+        border: 1px solid #D5D5D5;
+        box-sizing: border-box;
+        margin-left: -1px; 
+    }
+    button.page-link {
+        font-size: 20px;
+        color: #29b3ed;
+        font-weight: 500;
+        border: black;
+        
+    }
+    button.page-link {
+        display: inline-block;
+    
+    }
+            a {
+                background: #65a2e9;
+                margin: .25rem;
+                padding: .25rem .5rem;
+                border-radius: 4px;
+                text-decoration: none;
+                position: relative;
+                display: block;
+                color: #d1e5fa;
+            }    
+    
+</style>
 
 
 

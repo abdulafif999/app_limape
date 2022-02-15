@@ -40,7 +40,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'pagespeed'])->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('tim', TimController::class);
     Route::resource('karyawan', KaryawanController::class);
@@ -59,4 +59,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::put('indexKriteria/multiUpdate/{id}', [IndexKriteriaController::class, 'multiUpdate'])->name('multiUpdate');
     Route::delete('tim/multiDelete/{id}', [TimController::class, 'multiDelete'])->name('multiDelete') ;
     Route::delete('timUnit/DeleteTimUnit/{id}', [TimUnitController::class, 'DeleteTimUnit'])->name('DeleteTimUnit') ;
+});
+Route::middleware(['auth:sanctum', 'cache_response'])->group(function(){
+
 });

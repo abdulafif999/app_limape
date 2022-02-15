@@ -326,15 +326,15 @@ export default {
             var output_awal = '';
             var output_akhir = '';
             if(this.bulan_awal < 9 && this.bulan_awal>=0){
-                output_awal = this.tahun_awal + '-' + '0' + this.bulan_awal+1 + '-' + '01';
+                output_awal = this.tahun_awal + '-' + '0' + (this.bulan_awal+1) + '-' + '01';
             }else if(this.bulan_awal >= 9){
-                output_awal = this.tahun_awal + '-' + this.bulan_awal+1 + '-' + '01';
+                output_awal = this.tahun_awal + '-' + (this.bulan_awal+1) + '-' + '01';
             }
 
             if(this.bulan_akhir < 9 && this.bulan_akhir>=0){
-                output_akhir = this.tahun_akhir + '-' + '0' + this.bulan_akhir+1 + '-' + '01';
+                output_akhir = this.tahun_akhir + '-' + '0' + (this.bulan_akhir+1) + '-' + '01';
             }else if(this.bulan_akhir >= 9){
-                output_akhir = this.tahun_akhir + '-' + this.bulan_akhir+1 + '-' + '01';
+                output_akhir = this.tahun_akhir + '-' + (this.bulan_akhir+1) + '-' + '01';
             }
             this.form.periode_awal = output_awal;
             this.form.periode_akhir = output_akhir;

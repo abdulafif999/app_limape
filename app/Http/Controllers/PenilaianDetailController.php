@@ -62,12 +62,23 @@ class PenilaianDetailController extends Controller
     public function store(Request $request)
     {
         $pernum = Auth::user()->pernum;
-        
+        $kriteria = Kriteria::all()->toArray();
+        $banyakKriteria = count($kriteria);
         $request->validate([
+            'nilai' => 'required|array|min:'.$banyakKriteria.'',
             'nilai.*' => 'required|integer|min:0|max:100',
-            'status.*' => 'nullable',
-            'rekomendasi.*' => 'nullable',
+            'status' => 'nullable|array',
+            'status.*' => 'nullable|max:150',
+            'rekomendasi' => 'nullable|array',
+            'rekomendasi.*' => 'nullable|max:150',
+            'foto' => 'nullable|array',
             'foto.*' => 'nullable'
+        ],[
+            'nilai.min' => 'Semua Nilai Harus diisi',
+            'nilai.*.required' => 'Nilai Harus diisi',
+            'nilai.*.max' => 'Nilai tidak boleh melampaui 100',
+            'nilai.*.integer' => 'Nilai tidak boleh berkoma',
+            'nilai.*.min' => 'Nilai minimal 0',
         ]);
         
         $picture = $request->file('foto');
@@ -89,7 +100,7 @@ class PenilaianDetailController extends Controller
                 ]);
                 $n++;
             }
-        return redirect()->route('penilaian.index')->with('message', 'Data Berhasil Ditambah.');;
+        return redirect()->route('penilaian.index')->with('message', 'Data Berhasil Ditambah.');
     }
 
     /**
@@ -123,6 +134,11 @@ class PenilaianDetailController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nilai' => 'required|integer|min:0|max:100',
+            'status' => 'nullable|max:150',
+            'rekomendasi' => 'nullable|max:150',
+        ]);
         $penilaianDetail = PenilaianDetail::findOrFail($id);
         $penilaianDetail->nilai = $request->nilai;
         $penilaianDetail->status = $request->status;

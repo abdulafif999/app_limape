@@ -19,14 +19,72 @@
                 </span>
             </div>
         </div>
+
+        <div class="px-6 mt-4">
+            <blue-button @click="showTim" >Lihat</blue-button>
+        </div>
     </div>
+
+    <jet-dialog-modal :show="show" @close="show = false">
+            <template #title>
+                Daftar Tim 5P/Unit yang sudah dinilai Bulan ini
+            </template>
+
+            <template #content>
+                <div class="mt-4">
+                    <div class="flex flex-col">
+                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Nama Tim
+                                            </th>                                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr v-for="tim in listTim" :key="tim.id">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {{ tim.tim_unit.nama }}
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                            <!-- More people... -->
+                                    </tbody>
+                                </table>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template #footer>
+                <jet-secondary-button @click="show = false">
+                    Close
+                </jet-secondary-button>
+            </template>
+        </jet-dialog-modal>
 
 </template>
 
 <script>
 import { defineComponent } from 'vue'
+import BlueButton from '@/Components/BlueButton.vue'
+import JetDialogModal from '@/Jetstream/DialogModal.vue'
+import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
 
 export default defineComponent({
+    components:{
+        BlueButton,
+        JetDialogModal,
+        JetSecondaryButton,
+    },
     props:{
         timList:String,
         penilaians:Array,
@@ -40,6 +98,8 @@ export default defineComponent({
             tim_yg_dinilai:[{}],
             timPenilai:{},
             jumlahTim:0,
+            listTim:[],
+            show:false,
         }
     },
     mounted(){
@@ -51,6 +111,7 @@ export default defineComponent({
             this.getTimPenilai();
             var date = new Date()
             var bulan = date.getMonth()-1;
+            var x = 0;
             if(bulan < 0){
                 bulan = 11;
             }
@@ -61,6 +122,8 @@ export default defineComponent({
                         if(this.penilaians[i].pernum == this.timPenilai.karyawan.pernum){
                             if(this.penilaians[i].tim_unit_id == this.tim_yg_dinilai[index].tim_unit_id){
                                 this.checked_tim++;
+                                this.listTim[x] = this.tim_yg_dinilai[index]
+                                x++;
                             }
                             
 
@@ -93,6 +156,10 @@ export default defineComponent({
                 
             }
         },
+
+        showTim(){
+            this.show = true;
+        }
     }
 })
 </script>

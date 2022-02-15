@@ -106,10 +106,11 @@
                                     <div v-if="karyawanList" class="options border-transparent h-auto" v-bind:ref="'karyawan'+index">
                                         <ul>
                                             <li v-for="karyawan in karyawanList[index]" :key="karyawan.pernum" class="hover:bg-green-600" @click="setKaryawan(karyawan, index)">
-                                                {{karyawan.nama}}
+                                                {{karyawan.nama}} - {{karyawan.jabatan}} - {{karyawan.unit}}
                                             </li>
                                         </ul>
                                     </div>
+                                    <jet-input-error :message="form1.errors['pernum.'+index]" class="mt-2" />
                                 </div>
 
                                 <jet-input-error :message="form.errors.selected" class="mt-2" />                                
@@ -122,7 +123,7 @@
                                                 @keyup.enter="create" disabled
                                                 />
 
-                                    <jet-input-error :message="form1.errors.posisi" class="mt-2" />                                
+                                    <jet-input-error :message="form1.errors['posisi.'+index]" class="mt-2" />                           
                                 </div>                            
                             </td>
                         </tr>
@@ -388,6 +389,7 @@ export default {
             deletingTimModal:false,
             selectedTim: {},
             selectedTim1: {},
+            selectedMember:{},
             showTim:[],
             banyakAnggota:3,
             karyawanList:[[]],
@@ -444,7 +446,7 @@ export default {
         updateMember(tim){
             this.fetchKaryawan();
             this.updatingMember = true;
-            this.selectedTim = tim;
+            this.selectedMember = tim;
             this.member = tim.karyawan.nama
             this.form2.tim_unit_id = tim.tim_unit_id;
             this.form2.pernum = tim.pernum;
@@ -452,7 +454,7 @@ export default {
         },
 
         updateProses() {
-            this.form2.put(route('unitDetail.update', this.selectedTim.id), {
+            this.form2.put(route('unitDetail.update', this.selectedMember.id), {
                 preserveScroll: true,
                 preserveState:true,
                 onSuccess: () => {
@@ -529,12 +531,12 @@ export default {
         },
 
         deleteMember(dataTim){
-            this.selectedTim = dataTim;
+            this.selectedMember = dataTim;
             this.deletingMember = true;
         },
 
         deleteProses() {
-            this.form2.delete(route('unitDetail.destroy', this.selectedTim.id), {
+            this.form2.delete(route('unitDetail.destroy', this.selectedMember.id), {
                 preserveScroll: true,
                 preserveState:true,
                 errorBag: 'delete',

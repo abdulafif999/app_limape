@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex flex-col">
+        <div class="flex flex-col" v-if="form.listNilai.length > 1">
             <div class="px-my-2 overflow-x-auto sm:-mx-2 lg:-mx-2">
                 <div class="py-2 align-middle inline-block min-w-full lg:px-2">
                     <div class="overflow-hidden border-b">
@@ -26,7 +26,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="penilaian in form.listNilai.slice().reverse()" :key="penilaian.nama">
+                                <tr v-for="penilaian in form.listNilai.slice(0, 30)" :key="penilaian.nama">
                                     <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
                                             {{ penilaian.nama }}
@@ -39,7 +39,7 @@
                                     </td>                                    
                                     <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            {{ penilaian.bulan }}/{{penilaian.tahun}}
+                                            {{new Date(penilaian.periode).getMonth()+1}}/{{new Date(penilaian.periode).getFullYear()}}
                                         </div>
                                     </td>  
                                     <td class="px-2 py-2 whitespace-nowrap" :class="{ 'text-green-700' :penilaian.approve == 1, 'text-red-600' :penilaian.approve == 0 }">
@@ -85,12 +85,10 @@ export default{
                     this.form.listNilai[i] = this.penilaians[index]
                     this.form.listNilai[i].nama = this.penilaians[index].tim_unit.nama;
                     this.form.listNilai[i].tgl = this.penilaians[index].tgl;
-                    this.form.listNilai[i].bulan = periode.getMonth()+1;
-                    this.form.listNilai[i].tahun = periode.getFullYear();
                     if(this.penilaians[index].approve == true){
-                        this.form.listNilai[i].status = 'Sudah di Approve';
+                        this.form.listNilai[i].status = 'Sudah difinalisasi';
                     }else{
-                        this.form.listNilai[i].status = 'Belum di Approve'
+                        this.form.listNilai[i].status = 'Belum difinalisasi'
                     }
                     
                     i++;

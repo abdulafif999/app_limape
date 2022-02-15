@@ -49,6 +49,7 @@
                                                             </ul>
                                                         </div>
                                                     </div>
+                                                    <jet-input-error :message="form.errors['pernum.'+index]" class="mt-2" />
                                                 </td>
                                                 <td>
                                                     <div class="mt-4 items-center justify-center">
@@ -62,7 +63,7 @@
                                                             <option value="Anggota">Anggota</option>
                                                         </select>
 
-                                                        <jet-input-error :message="form.errors.posisi" class="mt-2" />                                
+                                                        <jet-input-error :message="form.errors['posisi.'+index]" class="mt-2" />                             
                                                     </div>                            
                                                 </td>
                                             </tr>

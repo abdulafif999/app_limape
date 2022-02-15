@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div v-show="selectedTim" id="rankingChart">
+  <div v-if="selectedTim" id="rankingChart">
     <apexcharts
       ref="chart"
       :width="rankingChart.width"
@@ -48,7 +48,7 @@
   <div>
       <div v-show="daftar">
         <div class="row" :v-bind="daftar">
-          <div class="bg-white column" v-for="daftar in daftar" :key="daftar.nama_tim">
+          <div class="bg-white column" v-for="daftar in daftar.tim" :key="daftar.nama_tim">
               <div class="">
                   <ul class="overflow-y: none">
                         <li>
@@ -109,7 +109,7 @@ export default {
             daftarTim:[{}],
             listTim:[]
         }),
-        tahun:2021,
+        tahun:2022,
         daftar:[],
         selectedTim:{},
         dataList:[],
@@ -259,7 +259,7 @@ export default {
                 },
                 events: {
                     markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
-                        this.getKriteria(seriesIndex, tim.tim)
+                        this.getKriteria(seriesIndex);
                     }
                 }   
                 
@@ -318,7 +318,7 @@ export default {
             this.form.periode = output;          
       },
       getKriteria(index, tim){
-          this.daftar = tim;
+          this.daftar = this.list.daftarTim[index];
       },
       filterTim(){
         const query = this.inputTim.toLowerCase();

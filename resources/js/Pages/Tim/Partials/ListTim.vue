@@ -96,9 +96,10 @@
                                             </li>
                                         </ul>
                                     </div>
+                                    <jet-input-error :message="form2.errors['selected.'+index]" class="mt-2" />
                                 </div>
 
-                                <jet-input-error :message="form.errors.selected" class="mt-2" />                                
+                                                         
                             </td>
                             <td>
                                 <div class="mt-4">
@@ -108,7 +109,7 @@
                                                 @keyup.enter="create" disabled
                                                 />
 
-                                    <jet-input-error :message="form.errors.posisi" class="mt-2" />                                
+                                    <jet-input-error :message="form2.errors['posisi.'+index]" class="mt-2" />                           
                                 </div>                            
                             </td>
                         </tr>

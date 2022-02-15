@@ -18,7 +18,7 @@ class LineChart
         return $this->chart->lineChart()
             ->setTitle('')
             ->setSubtitle('')
-            ->addData('Physical sales', [40, 93, 35, 42, 18, 82, 78, 90, 89, 89, 89, 66])
+            ->addData('', [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             ->setXAxis(['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'])
             ->toVue();
     }

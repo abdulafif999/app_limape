@@ -374,7 +374,7 @@ export default {
             var output_awal = '';
             var output_akhir= '';
             if(this.form.singleIndex[4] === ''){
-                this.form.singleIndex[4] = '-';
+                this.form.singleIndex[4] = 0;
             }
             if(this.bulan_awal < 10 && this.bulan_awal>=1){
                 output_awal = this.tahun_awal + '-' + '0' + this.bulan_awal + '-' + '01';

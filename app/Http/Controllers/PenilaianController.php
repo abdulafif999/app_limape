@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Events\PenilaianCreated;
 use App\Models\Penilaian;
 use App\Models\TimDetail;
 use Illuminate\Http\Request;
@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\PenilaianDetailController;
 use App\Models\IndexKriteria;
 use App\Models\Karyawan;
+use App\Models\Kriteria;
 use App\Models\PenilaianDetail;
 use App\Models\PenilaianTim;
 use App\Models\Tim;
@@ -17,7 +18,9 @@ use App\Models\TimUnit;
 use App\Models\UnitDetail;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Repository\Penilaians;
 use Illuminate\Support\Facades\Auth;
+
 
 class PenilaianController extends Controller
 {
@@ -33,28 +36,20 @@ class PenilaianController extends Controller
         $indexKriteras = IndexKriteria::all();
         $timList = Tim::all();
         $penilaianTims = PenilaianTim::with('tim', 'timUnit')->get();
-        $data = Penilaian::when($request->input('term'), function($query, $term){
+        $dataPenilaian = Penilaian::when($request->input('term'), function($query, $term){
             $query->where('tim_unit_id', 'LIKE', '%'.$term.'%');
         })->when($request->input('periode'), function($query, $termPeriod){
             $termPeriod = Carbon::parse($termPeriod);
             $query->whereDate('periode', '=', $termPeriod->format('y-m-d'));
-        })->with('karyawan', 'timUnit')->get();
+        })->with('karyawan', 'timUnit')->orderBy('created_at', 'desc')->get();
 
         $penilaian = Penilaian::when($request->input('allTerm'), function($query, $term){
             $query->where('tim_unit_id', 'LIKE', '%'.$term.'%');
         })->when($request->input('allPeriode'), function($query, $termPeriod){
             $termPeriod = Carbon::parse($termPeriod);
             $query->whereDate('periode', '=', $termPeriod->format('y-m-d'));
-        })->with('karyawan', 'timUnit')->get();
+        })->with('karyawan', 'timUnit')->orderBy('created_at', 'desc')->get();
         
-        // $data = Penilaian::when($request->term, function($query, $term){
-        //     $query->where('tim_unit_id', 'LIKE', $term);
-        // })->with('karyawan', 'timUnit')->get();
-        // $periode = $request->input('periode');
-        // $data->when($periode, function($query, $termPeriod){
-        //     $termPeriod = Carbon::parse($termPeriod);
-        //     $query->whereDate('periode', '=', $termPeriod->format('y-m-d'));
-        // });
         $timUnit = TimUnit::orderBy('nama', 'asc')->get();
         $dataDetail = PenilaianDetail::with('kriteria','penilaian')->get();
         $unitDetails = UnitDetail::with('timUnit','karyawan')->get();
@@ -62,10 +57,11 @@ class PenilaianController extends Controller
         $role = Auth::user()->role;
         $filter = TimDetail::all('nip')->toArray();
         $karyawan = Karyawan::whereIn('nip', $filter)->get();
+        $kriterias = Kriteria::orderBy('nama', 'asc')->orderBy('sub_kriteria', 'asc')->get();
 
 
         return Inertia::render('Penilaian/Index', [
-            'penilaians' => $data, 
+            'penilaians' => $dataPenilaian, 
             'tims' => $tims,
             'timList' => $timList,
             'timUnits' => $timUnit,
@@ -81,6 +77,7 @@ class PenilaianController extends Controller
             'karyawans' => $karyawan,
             'indexKriterias' => $indexKriteras,
             'allPenilaian' =>$penilaian,
+            'kriterias' => $kriterias,
         ]);
     }
 
@@ -164,7 +161,7 @@ class PenilaianController extends Controller
             $update->update($values);
         };
 
-        return redirect()->back()->with('message', 'Data berhasil di Approv');
+        return redirect()->route('penilaian.index')->with('message', 'Data berhasil di Approv');
         
     }
 

@@ -15,6 +15,10 @@
                                         class="px-2 py-2 text-left text-xs font-light text-black uppercase tracking-wider">
                                         Tanggal Penilaian
                                     </th>
+                                    <th scope="col"
+                                        class="px-2 py-2 text-left text-xs font-light text-black uppercase tracking-wider">
+                                        Periode
+                                    </th>
                                     <th scope="col" class="relative px-2 py-2 text-left text-xs font-light text-black uppercase tracking-wider">
                                         Hasil Penilaian
                                     </th> 
@@ -22,7 +26,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 scroll">
-                                <tr v-for="penilaian in penilaians.slice(0, 20).reverse()" :key="penilaian.id">
+                                <tr v-for="penilaian in penilaians.slice(0, 20)" :key="penilaian.id">
                                     <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
                                             {{ penilaian.tim_unit.nama }}
@@ -33,9 +37,14 @@
                                             {{ penilaian.tgl }}
                                         </div>
                                     </td>
-                                    <td class="px-2 py-2 flex whitespace-nowrap" v-if="penilaian.tim_unit_id == tim.tim_unit_id">
+                                    <td class="px-2 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <blue-button @click="showPenilaian(penilaian)" class="">Lihat</blue-button>
+                                            {{new Date(penilaian.periode).getMonth()+1}}/{{new Date(penilaian.periode).getFullYear()}}
+                                        </div>
+                                    </td>                                
+                                    <td class="px-2 py-2 flex whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <blue-button @click="showPenilaian(penilaian)" class="h-auto">Lihat</blue-button>
                                         </div>
                                     </td>                            
                                 </tr>
@@ -58,7 +67,7 @@
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                    <table class="min-w-full divide-y divide-gray-200">
+                                    <table class="min-w-full divide-y divide-gray-200 table table-bordered" style="width:100%">
                                         <thead class="bg-gray-50">
                                             <tr>
                                                 <th scope="col"
@@ -107,13 +116,13 @@
                                                         {{penilaian.nilai}}
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="flex items-center">
+                                                <td class="px-6 py-4 whitespace-nowrap options">
+                                                    <div class="py-3 text-left text-xs tracking-wider options" style="vertical-align:middle">
                                                         {{ penilaian.status }}
                                                     </div>
                                                 </td>                                             
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="flex items-center">
+                                                <td class="px-6 py-4 whitespace-nowrap options">
+                                                    <div class="py-3 text-left text-xs tracking-wider options" style="vertical-align:middle">
                                                         {{ penilaian.rekomendasi }}
                                                     </div>
                                                 </td>
@@ -182,6 +191,7 @@ export default{
                 periode:'',
                 
             }),
+            date:new Date(this.penilaians.periode),
             tim:{},
             maxWidth:'3xl'
         }
@@ -201,6 +211,7 @@ export default{
             this.showModal = true;
             this.selectedPenilaian = penilaian;
             this.addNilai(penilaian);
+            
         },
 
         addNilai(penilaian){
@@ -233,5 +244,32 @@ export default{
         max-height: 300px;
         overflow-y: scroll;
         border: 1px solid lightgray;
+    }
+    .options{
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: inherit;
+    }
+    .table{
+        font-size: 13px;        
+        box-sizing: border-box;
+        padding: 0;
+        -webkit-box-sizing: border-box;
+        width: 100%;
+        margin: 0 auto;
+        clear: both;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .table-bordered{
+        border: 1px solid #f4f4f4;
+        overflow-x: hidden;
+        overflow-y: auto;
+        font-family: "Poppins", sans-serif;
+        font-weight: 400;
+        line-height: 1.625;
+        color: #666;
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
     }
 </style>

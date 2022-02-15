@@ -22,7 +22,7 @@ class KaryawanController extends Controller
     {
         $data = Karyawan::orderBy('nama', 'asc')->when($request->term, function($query, $term){
             $query->where('nama', 'LIKE', '%'.$term.'%' );
-        })->paginate(20);
+        })->get();
         return Inertia::render('Karyawan/Index', ['karyawans' => $data]);
     }
 

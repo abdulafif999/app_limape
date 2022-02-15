@@ -31,7 +31,7 @@
                                     </label>
 
                                     <label class="text-gray-700">
-                                        Tim yang Dinilai
+                                        Area Penilaian
                                         <select class="block w-52 py-2 border ml-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                             v-model="form.tim_unit_id">
                                             <option value="" disabled selected>Pilih Tim 5P/Unit</option>
@@ -77,7 +77,7 @@
                                 <div :v-on:show="getPenilaianTim($page.props.user.pernum)" >
                                     <div>
                                     <label class="text-gray-700" >
-                                        Tim yang Dinilai
+                                        Area Penilaian
                                         <select class="block w-52 py-2 border ml-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                             v-model="form.tim_unit_id">
                                             <option value="" disabled selected>Pilih Tim 5P/Unit</option>
@@ -126,7 +126,7 @@
                         <div class="py-my-6 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                <table class="min-w-full divide-y divide-gray-200">
+                                <table class="min-w-full divide-y divide-gray-200 table-bordered table">
                                     <thead class="bg-gray-50">
                                         <tr>
                                             <th scope="col"
@@ -173,16 +173,16 @@
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
+                                                <div class="py-3 text-left text-xs tracking-wider options" style="vertical-align:middle">
                                                     {{ penilaian.status }}
                                                 </div>
                                             </td>                                             
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
+                                            <td class="px-6 py-4 whitespace-nowrap options">
+                                                <div class="py-3 text-left text-xs tracking-wider options" style="vertical-align:middle">
                                                     {{ penilaian.rekomendasi }}
                                                 </div>
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
+                                            <td class="px-6 py-4 whitespace-nowrap options">
                                                 <div class="flex items-center">
                                                     {{ penilaian.foto }}
                                                 </div>
@@ -292,7 +292,7 @@ export default {
             ],
             periode_bulan:[],
             bulan:'',
-            tahun:2021,
+            tahun:2022,
             
             form: this.$inertia.form({
                 tgl: '',

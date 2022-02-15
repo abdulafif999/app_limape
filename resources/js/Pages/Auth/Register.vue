@@ -15,11 +15,6 @@
             </div>
 
             <div class="mt-4">
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required />
-            </div>
-
-            <div class="mt-4">
                 <jet-label for="pernum" value="NIK" />
                 <jet-input id="pernum" type="text" class="mt-1 block w-full" v-model="form.pernum" required />
             </div>

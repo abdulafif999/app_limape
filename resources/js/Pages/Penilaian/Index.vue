@@ -22,7 +22,8 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <list-penilaian :penilaians="penilaians" :penilaianDetails="penilaianDetails" :tims="tims" 
                 :role="role" :pernum="pernum" :timList="timList" :timUnits="timUnits"
-                :term="term" :periode="periode" :penilaianTims="penilaianTims" :indexKriterias="indexKriterias" />
+                :term="term" :periode="periode" :penilaianTims="penilaianTims" :indexKriterias="indexKriterias" :kriterias="kriterias"
+                />
             </div>
         </div>
 
@@ -30,7 +31,8 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <all-penilaian :penilaians="allPenilaian" :penilaianDetails="penilaianDetails" :tims="tims" 
                 :role="role" :pernum="pernum" :timList="timList" :timUnits="timUnits"
-                :term="allTerm" :periode="allPeriode" :penilaianTims="penilaianTims" :indexKriterias="indexKriterias" />
+                :term="allTerm" :periode="allPeriode" :penilaianTims="penilaianTims" :indexKriterias="indexKriterias" 
+                />
             </div>
         </div>
     </app-layout>
@@ -73,8 +75,10 @@
             penilaianTims:Array,
             indexKriterias:Array,
             allPenilaian:Array,
+            kriterias:Array,
             
         },
+        
         method:{
             
         },

@@ -30,8 +30,8 @@ class DashboardController extends Controller
 public function index(NilaiChart $penilaianChart, LineChart $rankingChart)
     {
         $penilaianDetail = PenilaianDetail::with('kriteria', 'penilaian')->get();
-        $penilaian = Penilaian::with('karyawan', 'timUnit')->get();
-        $approved = Penilaian::where('approve', '=' , true)->with('karyawan', 'timUnit')->get();
+        $penilaian = Penilaian::with('karyawan', 'timUnit')->orderBy('created_at', 'desc')->get();
+        $approved = Penilaian::where('approve', '=' , true)->with('karyawan', 'timUnit')->orderBy('created_at', 'desc')->get();
         $timUnit = UnitDetail::with('timUnit', 'karyawan')->get();
         $tim = TimDetail::with('karyawan', 'tim')->get();
         $timlist = TimUnit::orderBy('nama', 'asc')->get();

@@ -19,7 +19,7 @@
 
                     </div>
                     
-                    <div class="items-center justify-center">
+                    <div class="items-center object-center justify-items-center justify-center">
                         <gambar-dashboard></gambar-dashboard>
                     </div>
                     
@@ -28,13 +28,25 @@
             </div>
         </div>
 
-        <div class="py-4" v-if="$page.props.user.role=='user'">
+        <div class="py-4" v-if="$page.props.user.role=='user' && showPenilaian">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="overflow-hidden shadow-xl sm:rounded-lg items-center">
                         <div class="self-center  flex justify-center">
-                            <tim-penilai :timList="timPenilai" :penilaians="penilaians" :tims="tims" :penilaianTims="penilaianTims" :currentUser="currentUser" class="px-3"></tim-penilai>
+                            <this-month :timList="timPenilai" :penilaians="penilaians" :tims="tims" :penilaianTims="penilaianTims" :currentUser="currentUser" class="px-3"></this-month>
 
-                            <tim-unit :timList="timPenilai" :penilaians="penilaians" :tims="tims" :penilaianTims="penilaianTims" :currentUser="currentUser" class="px-3"></tim-unit>
+                            <last-month :timList="timPenilai" :penilaians="penilaians" :tims="tims" :penilaianTims="penilaianTims" :currentUser="currentUser" class="px-3"></last-month>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-4">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="overflow-hidden shadow-xl sm:rounded-lg items-center">
+                        <div class="self-center  flex justify-center">
+                            <all-this-month :timList="timList" :penilaians="penilaians" :tims="tims" :penilaianTims="penilaianTims"  class="px-3"></all-this-month>
+
+                            <all-last-month :timList="timList" :penilaians="penilaians" :tims="tims" :penilaianTims="penilaianTims"  class="px-3"></all-last-month>
                         </div>
                 </div>
             </div>
@@ -60,16 +72,21 @@
     import AppLayout from '@/Layouts/AppLayout.vue'
     import Welcome from '@/Jetstream/Welcome.vue'
     import GambarDashboard from '@/Components/GambarDashboard.vue'
-    import TimPenilai from '@/Components/TimPenilai.vue'
-    import TimUnit from '@/Components/TimUnit.vue'
+    import ThisMonth from '@/Components/ThisMonth.vue'
+    import LastMonth from '@/Components/LastMonth.vue'
+    import AllThisMonth from '@/Components/AllThisMonth.vue'
+    import AllLastMonth from '@/Components/AllLastMonth.vue'
 
     export default defineComponent({
         components: {
             AppLayout,
             Welcome,
             GambarDashboard,
-            TimPenilai,
-            TimUnit,
+            ThisMonth,
+            LastMonth,
+            AllThisMonth,
+            AllLastMonth
+
         },
         data(){
             return{

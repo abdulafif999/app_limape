@@ -31,7 +31,7 @@
     <apexcharts
       ref="chart"
       :width="penilaianChart.width"
-      height="1000"
+      :height="tinggi"
       :type="penilaianChart.type"
       :options="penilaianChart.options"
       :series="penilaianChart.series"
@@ -65,6 +65,7 @@ export default {
   data() {
     return {
         month:['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'],
+        tinggi:300,
 
         form:this.$inertia.form({
             rank:'',
@@ -81,7 +82,7 @@ export default {
             series:[{}],
         }),
         bulan:'',
-        tahun:'',
+        tahun:2022,
         daftar:[],
         selectedTim:{},
     }     
@@ -132,19 +133,21 @@ export default {
                     var x = 0;
                     var kriteria_array = [];
                     var total_array = [];
-                    for(var j=0;j < this.penilaianDetails.length;j++){                       
+                    for(var j=0;j < this.penilaianDetails.length;j++){                   
+                        
                         var sub_total = 0;
                         var index_kriteria = '';
                         kriteria_array[x] = {};
                         if(this.penilaianDetails[j].penilaian.tim_unit_id == this.penilaianTims[index].tim_unit_id){
-                        for(var k=0;k<this.tims.length;k++){
+                          var periode_penilaian = new Date(this.penilaianDetails[j].penilaian.periode);    
+                          for(var k=0;k<this.tims.length;k++){
                             if(this.penilaianDetails[j].penilaian.pernum == this.tims[k].karyawan.pernum && this.tims[k].tim_id == this.penilaianTims[index].tim_id){
                             for(var l=0;l < this.indexKriterias.length;l++){
                                 var periode_awal = new Date(this.indexKriterias[l].periode_awal);
                                 var periode_akhir = new Date(this.indexKriterias[l].periode_akhir);
-                                var periode_penilaian = new Date(this.penilaianDetails[j].penilaian.periode);
                                 if(periode_penilaian.getMonth() >= periode_awal.getMonth() && periode_penilaian.getFullYear() >= periode_awal.getFullYear() 
                                 && periode_penilaian.getMonth() <= periode_akhir.getMonth() && periode_penilaian.getFullYear() <= periode_akhir.getFullYear()
+                                && bulan_periode == periode_penilaian.getMonth() && periode_penilaian.getFullYear() == tahun_periode
                                 ){      
                                     if(this.indexKriterias[l].kriteria == this.penilaianDetails[j].kriteria.nama && this.indexKriterias[l].sub_kriteria == this.penilaianDetails[j].kriteria.sub_kriteria){
                                         sub_total = sub_total + this.penilaianDetails[j].nilai
@@ -229,10 +232,11 @@ export default {
       },
     fillData(){
       this.getRanking();
+      this.tinggi = 800;
       this.penilaianChart.options = {
         chart: {
               type: 'bar',
-              height: 1000,
+              height: 800,
               toolbar:{
                     show:true,
                     offsetX: 0,

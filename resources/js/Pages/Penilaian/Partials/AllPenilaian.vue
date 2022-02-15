@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="bg-white text-left justify-center text-gray-600 capitalize h-12 border">
-            <label class="h-10">
+            <label class="h-10 uppercase text-lg block bold font-bold">
                 List Semua Penilaian
             </label>
         </div>
@@ -63,7 +63,7 @@
                                                     v-model="bulan" @change="setPeriode()">
                                                     <option value="" selected disabled>Pilih Bulan</option>
                                                     <option value="" selected>Semua</option>
-                                                    <option v-for="bulan in month" :key="bulan.index" :value="bulan.index+1">{{bulan.nama}}</option>
+                                                    <option v-for="bulan in month" :key="bulan.index" :value="bulan.index">{{bulan.nama}}</option>
                                                 </select>     
                                                 <select class="block py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                                     v-model="tahun" >
@@ -111,7 +111,14 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="(penilaian, index) in data.dataPenilaian.slice().reverse()" :key="penilaian.approve">
+                                <tr v-if="dataPenilaian < 1">
+                                    <td class="px-6 py-4 whitespace-nowrap border-r-2" colspan="7">
+                                            <div class="flex items-center text-center">
+                                                Tidak Ada Penilaian
+                                            </div>
+                                    </td> 
+                                </tr>
+                                <tr v-for="(penilaian,index) in displayedPosts" :key="penilaian.approve">
                                         <td class="px-6 py-4 whitespace-nowrap border-r-2">
                                             <div class="flex items-center">
                                                 {{ index+1 }}
@@ -134,12 +141,15 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                {{ penilaian.bulan }}/{{penilaian.tahun}}
+                                                {{new Date(penilaian.periode).getMonth()+1 }}/{{new Date(penilaian.periode).getFullYear()}}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap" :class="{ 'text-green-700' :penilaian.approve == 1, 'text-red-600' :penilaian.approve == 0 }">
-                                            <div class="flex items-center">
-                                                {{penilaian.status}}
+                                        <td class="px-6 py-4 whitespace-nowrap ">
+                                            <div class="flex items-center text-green-600" v-if="penilaian.approve == true">
+                                                Sudah difinalisasi
+                                            </div>
+                                            <div class="flex items-center text-red-600" v-if="penilaian.approve == false">
+                                                Belum difinalisasi
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right flex text-sm font-medium">
@@ -150,6 +160,27 @@
                                 <!-- More people... -->
                             </tbody>
                         </table>
+                        <div class="justify-center object-center items-center content-center">
+                            <nav class="pagination">
+                                <ul class="flex">
+                                    <li class="page-item px-2">
+                                        <button class="page-link" v-if="page != 1" @click="page = 1" > First </button>
+                                    </li>
+                                    <li class="page-item px-2">
+                                        <button class="page-link" v-if="page != 1" @click="page--" > Previous </button>
+                                    </li>
+                                    <li class="page-item px-2">
+                                        <button class="page-link" v-for="pageNumber in pages.slice(page-1, page+5)" v-bind:key="pageNumber" @click="page = pageNumber" :class="{'focus:ring-offset-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2': page == pageNumber}"> {{pageNumber}} </button>
+                                    </li>
+                                    <li class="page-item px-2">
+                                        <button @click="page++" v-if="page < pages.length" class="page-link"> Next </button>
+                                    </li>
+                                    <li class="page-item px-2">
+                                        <button class="page-link" v-if="page < pages.length" @click="page = pages.length" > Last </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -166,7 +197,7 @@
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200 table table-bordered" style="width:100%">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col"
@@ -215,13 +246,13 @@
                                         {{penilaian.nilai}}
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                <td class="px-6 py-4 whitespace-nowrap options">
+                                    <div class="py-3 text-left text-xs tracking-wider options" style="vertical-align:middle">
                                         {{ penilaian.status }}
                                     </div>
                                 </td>                                             
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
+                                <td class="px-6 py-4 whitespace-nowrap options">
+                                    <div class="py-3 text-left text-xs tracking-wider options" style="vertical-align:middle">
                                         {{ penilaian.rekomendasi }}
                                     </div>
                                 </td>
@@ -306,10 +337,7 @@ export default {
         penilaianTims:Array,
         indexKriterias:Array,
     },
-    mounted(){
-        this.getData();        
-        
-    },
+    
 
     data() {
         return {
@@ -323,7 +351,11 @@ export default {
             maxWidth:'2md',
             preview:'',
             bulan:'',
-            tahun:2021,
+            tahun:2022,
+            page: 1,
+			perPage: 10,
+			pages: [],
+            TimPenilai:{},
 
 
             
@@ -368,9 +400,7 @@ export default {
                 periode:'',
                 
             }),
-            data:this.$inertia.form({
-                dataPenilaian:[],
-            }),
+            dataPenilaian:[],
             edit:this.$inertia.form({
                 penilaian_id:'',
                 kriteria:'',
@@ -399,50 +429,37 @@ export default {
             this.nilaiTotal = parseFloat((nilaiTotal).toFixed(2));
         },
         getData(){
+            this.getTimObject();
             var x = 0;
-                for(var i=0;i<this.tims.length;i++){
-                    if(this.tims[i].karyawan.pernum == this.pernum){
-                        for(var index=0;index<this.penilaians.length;index++){
-                            for(var j=0;j<this.tims.length;j++){
-                                if(this.tims[j].tim_id == this.tims[i].tim_id){
-                                    if(this.tims[j].karyawan.pernum == this.penilaians[index].pernum){
-                                            var period = new Date(this.penilaians[index].periode)
-                                            this.data.dataPenilaian[x] = this.penilaians[index];
-                                            this.data.dataPenilaian[x].bulan = period.getMonth()+1;
-                                            this.data.dataPenilaian[x].tahun = period.getFullYear();
-                                            this.data.dataPenilaian[x].nama_tim = this.tims[j].tim.nama
-                                            if(this.penilaians[index].approve == true){
-                                                this.data.dataPenilaian[x].status = 'Sudah di Approve';
-                                            }else{
-                                                this.data.dataPenilaian[x].status = 'Belum di Approve'
-                                            }
-                                            x++;
-                                    }
-                                }
+            if(this.role == 'user'){
+                for(var index=0;index<this.penilaians.length;index++){
+                    for(var j=0;j<this.tims.length;j++){
+                        if(this.tims[j].tim_id == this.TimPenilai.tim_id){
+                            if(this.tims[j].karyawan.pernum == this.penilaians[index].pernum){
+                                    this.dataPenilaian[x] = this.penilaians[index];
+                                    x++;
                             }
                         }
                     }
                 }
-            this.getTimPenilai();
-        },
-        
-
-        getTimPenilai(){
-            for(var index=0;index<=this.penilaians.length-1;index++){
-                for(var j=0;j<=this.tims.length-1;j++){
-                    if(this.penilaians[index].pernum == this.tims[j].karyawan.pernum){
-                        var period = new Date(this.penilaians[index].periode)
-                        this.penilaians[index].nama_tim = this.tims[j].tim.nama;
-                        this.penilaians[index].bulan = period.getMonth()+1;
-                        this.penilaians[index].tahun = period.getFullYear();
-                    }
+                for(var i =0;i<this.month.length;i++){
+                    this.month[i].index = i;
                 }
+                this.getTim();
             }
-            for(var i =0;i<this.month.length;i++){
-                this.month[i].index = i;
+        },
+        getTimObject(){
+            for (let index = 0; index < this.tims.length; index++) {
+                if(this.tims[index].karyawan.pernum == this.pernum){
+                    this.TimPenilai = this.tims[index];
+                }
+                
             }
-            this.getKetua();
-            
+            if(this.periode != null){
+                var date = new Date(this.periode);
+                this.bulan = date.getMonth();
+                this.tahun = date.getFullYear();
+            }
         },
     
         editConfirmation(penilaian){        
@@ -456,36 +473,26 @@ export default {
             this.edit.foto = penilaian.foto;
             this.preview = penilaian.foto;
         },
-        update() {
-            this.edit.put(route('penilaianDetail.update', this.editObject.id), {
-                preserveScroll: true,
-                onSuccess: () => {
-                    this.editModal = false;
-                    this.edit.reset();
-                    this.openNilai(this.selectedPenilaian);
-                },
-            })
-        },
 
-        updateFotoPreview(){
-                const reader = new FileReader();
+        // updateFotoPreview(){
+        //         const reader = new FileReader();
 
-                this.edit.foto = this.$refs[foto].files[0];
+        //         this.edit.foto = this.$refs[foto].files[0];
 
-                reader.onload = (e) => {
-                    this.preview = e.target.result;
-                };
+        //         reader.onload = (e) => {
+        //             this.preview = e.target.result;
+        //         };
                 
 
-                reader.readAsDataURL(this.$refs[foto].files[0]);
+        //         reader.readAsDataURL(this.$refs[foto].files[0]);
                 
-        },
+        // },
 
         setPeriode(){
-            if(this.bulan < 10 && this.bulan>=1){
-                var output = this.tahun + '-' + '0' + this.bulan + '-' + '01';
-            }else if(this.bulan >= 10){
-                var output = this.tahun + '-' + this.bulan + '-' + '01';
+            if(this.bulan < 9 && this.bulan>=0){
+                var output = this.tahun + '-' + '0' + (this.bulan+1) + '-' + '01';
+            }else if(this.bulan >= 9){
+                var output = this.tahun + '-' + (this.bulan+1) + '-' + '01';
             }
             this.form.periode = output;
             this.searchPeriode();
@@ -516,20 +523,6 @@ export default {
                 this.getData();
             }
         },
-        getKetua(){
-            if(this.role == 'admin'){
-                this.showApproval = true;
-            }
-            else{
-                for (let index = 0; index < this.tims.length; index++) {
-                    if(this.pernum == this.tims[index].karyawan.pernum && this.tims[index].posisi == 'Ketua'){
-                        this.showApproval = true;
-                    }
-                    
-                }
-            }
-            this.getTim();
-        },
 
         getTim(){
             var x=0;
@@ -545,10 +538,140 @@ export default {
                 }
             }
         },
+        setPages () {
+			let numberOfPages = Math.ceil(this.dataPenilaian.length / this.perPage);
+			for (let index = 1; index <= numberOfPages; index++) {
+				this.pages.push(index);
+			}
+		},
+		paginate(posts) {
+			let page = this.page;
+			let perPage = this.perPage;
+			let from = (page * perPage) - perPage;
+			let to = (page * perPage);
+			return posts.slice(from, to);
+		}
+
+    },    
+    
+    computed:{
+        displayedPosts:function() {
+			return this.paginate(this.dataPenilaian);
+		}
     },
+    watch: {
+		dataPenilaian:function() {
+			this.setPages();
+		}
+	},
+	created(){
+		this.getData();
+        this.setPages();
+	},
+    filters: {
+		trimWords(value){
+			return value.split(" ").splice(0,20).join(" ") + '...';
+		}
+	},
+    
 }
 </script>
 
+<style scoped>
+    .scroll{
+        list-style: none;
+        padding-left: 8px;
+        max-height: 300px;
+        overflow-y: scroll;
+        border: 1px solid lightgray;
+    }
+    .options{
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: inherit;
+    }
+    .table{
+        font-size: 13px;        
+        box-sizing: border-box;
+        padding: 0;
+        -webkit-box-sizing: border-box;
+        width: 100%;
+        margin: 0 auto;
+        clear: both;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .table-bordered{
+        border: 1px solid #f4f4f4;
+        overflow-x: hidden;
+        overflow-y: auto;
+        font-family: "Poppins", sans-serif;
+        font-weight: 400;
+        line-height: 1.625;
+        color: #666;
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+    }
+    .page-link {
+	    display: inline-block;
+    }
+    .page-link {
+        font-size: 20px;
+        color: #29b3ed;
+        font-weight: 500;
+    }
+    .offset{
+        width: 1000px !important;
+        margin: 20px auto;  
+    }
+
+    .pagination {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+    .page-link:not(:disabled):not(.disabled) {
+        cursor: pointer;
+    }
+    button{
+        background: #d1e5fa;
+        margin: .25rem;
+        padding: .25rem .5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        position: relative;
+        display: block;
+        color: #65a2e9;
+    }
+    li {
+        display: inline-block;
+        border: 1px solid #D5D5D5;
+        box-sizing: border-box;
+        margin-left: -1px; 
+    }
+    button.page-link {
+        font-size: 20px;
+        color: #29b3ed;
+        font-weight: 500;
+        border: black;
+        
+    }
+    button.page-link {
+        display: inline-block;
+    
+    }
+            a {
+                background: #65a2e9;
+                margin: .25rem;
+                padding: .25rem .5rem;
+                border-radius: 4px;
+                text-decoration: none;
+                position: relative;
+                display: block;
+                color: #d1e5fa;
+            }    
+</style>
 
 
 

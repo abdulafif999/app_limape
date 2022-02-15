@@ -5,6 +5,7 @@ import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import VueApexCharts from "vue3-apexcharts";
 import Datepicker from 'vue3-date-time-picker';
+import VueSnip from 'vue-snip';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -15,6 +16,7 @@ createInertiaApp({
         return createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(VueApexCharts)
+            .use(VueSnip)
             .mixin({ methods: { route } })
             .component('Datepicker', Datepicker)
             .mount(el);

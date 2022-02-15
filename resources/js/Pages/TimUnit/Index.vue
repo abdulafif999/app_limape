@@ -1,5 +1,6 @@
 <template>
-    <app-layout title="TimUnit" :showPenilaian="true">
+    <app-layout title="Tim 5P/Unit" :showPenilaian="true"
+    >
         <template #header>
             <h2 class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                 Tim 5P/Unit

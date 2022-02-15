@@ -53,7 +53,9 @@ class TimDetailController extends Controller
     {
         $request->validate([
             'tim_id' => 'required',
+            'selected' => 'required|array|min:1',
             'selected.*' => 'required',
+            'posisi' => 'required|array|min:1',
             'posisi.*' => 'required|string'
         ]);
         

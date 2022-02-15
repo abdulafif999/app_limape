@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\CacheResponseMiddleware;
 use App\Models\User;
+use Illuminate\Cache\CacheServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
@@ -38,5 +40,6 @@ class AppServiceProvider extends ServiceProvider
                 'message' => Session::get('message'),
             ];
         });
+        $this->app->singleton(CacheResponseMiddleware::class);
     }
 }
