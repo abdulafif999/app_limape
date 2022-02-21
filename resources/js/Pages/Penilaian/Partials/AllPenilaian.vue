@@ -121,7 +121,7 @@
                                 <tr v-for="(penilaian,index) in displayedPosts" :key="penilaian.approve">
                                         <td class="px-6 py-4 whitespace-nowrap border-r-2">
                                             <div class="flex items-center">
-                                                {{ index+1 }}
+                                                {{ ((page*perPage) - perPage + index)+1 }}
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">

@@ -30,7 +30,7 @@
                                             <select class="block py-2 border ml-2 border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                                 v-model="bulan" @change="setPeriode()">
                                                 <option value="" disabled selected>Pilih Bulan</option>
-                                                <option v-for="bulan in month" :key="bulan.index" :value="bulan.index">{{bulan.nama}}</option>
+                                                <option v-for="bulan in periode_bulan" :key="bulan.index" :value="bulan.index">{{bulan.nama}}</option>
                                             </select>     
                                         </label>
                                         <label class="text-gray-900">

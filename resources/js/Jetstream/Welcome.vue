@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="p-6 sm:px-20 flex bg-white border-b border-gray-200 items-center object-center justify-center">
-            <iframe title="limape_project - P1-P5 Stacked Bar" width="1024" height="640"  src="https://www.powerbi.com/view?r=eyJrIjoiN2Q0ZWVjMjgtNTU2Zi00ODQ0LTgxZGEtNzY0ODM2NjkxNzk2IiwidCI6IjM0NjI3ODc0LWVkM2EtNDk3Yy04ZmI5LTE2Y2U3ZTk3NjRmMSIsImMiOjEwfQ%3D%3D&pageName=ReportSection10c3b842bbaa3d189206" frameborder="0" allowFullScreen="true"></iframe>
+            <iframe title="limape_project - P1-P5 Stacked Bar" width="1024" height="640"  src="https://www.powerbi.com/view?r=eyJrIjoiOWMxZjgwYmQtNjYwYS00MjA5LWEzZWMtNjVkMzNkZjg4Yzk1IiwidCI6IjM0NjI3ODc0LWVkM2EtNDk3Yy04ZmI5LTE2Y2U3ZTk3NjRmMSIsImMiOjEwfQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
         </div>
 
         <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2">

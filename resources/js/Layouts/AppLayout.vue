@@ -35,11 +35,7 @@
 
                                         <jet-nav-link :href="route('penilaian.index')" :active="route().current('penilaian.*')" v-if="showPenilaian" class="text-base font-medium text-gray-500 hover:text-gray-900">
                                             Penilaian
-                                        </jet-nav-link>
-
-                                        <jet-nav-link :href="route('user.index')" :active="route().current('user.*')" v-if="$page.props.permission.user.viewAny" class="text-base font-medium text-gray-500 hover:text-gray-900">
-                                            User
-                                        </jet-nav-link>                                                                 
+                                        </jet-nav-link>                                                 
 
                                         <Popover class="relative" v-slot="{ open }">
                                             <PopoverButton :class="[open ? 'text-gray-900' : 'text-gray-500', 'group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500']" v-if="$page.props.permission.user.viewAny">
@@ -136,11 +132,7 @@
 
                                             <jet-nav-link :href="route('penilaian.index')" :active="route().current('penilaian.*')" class="text-base font-medium text-gray-500 hover:text-gray-900">
                                                 Penilaian
-                                            </jet-nav-link>
-
-                                            <jet-nav-link :href="route('user.index')" :active="route().current('user.*')" class="text-base font-medium text-gray-500 hover:text-gray-900" v-if="$page.props.permission.user.viewAny">
-                                                Users
-                                            </jet-nav-link>                                            
+                                            </jet-nav-link>                                         
                                             </div>
                                         </div>
                                         </div>
@@ -274,10 +266,6 @@
 
                         <jet-responsive-nav-link :href="route('penilaian.index')" :active="route().current('penilaian.*')">
                             Penilaian
-                        </jet-responsive-nav-link>
-
-                        <jet-responsive-nav-link :href="route('user.index')" :active="route().current('user.*')" v-if="$page.props.permission.user.viewAny">
-                            Users
                         </jet-responsive-nav-link>
                         
                         <div class="space-x-4 sm:-my-px sm:ml-1 sm:flex justify-between">

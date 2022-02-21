@@ -990,6 +990,10 @@ video {
 	width: 50% !important;
 }.w-10\/12 {
 	width: 83.333333% !important;
+}.w-max {
+	width: -webkit-max-content !important;
+	width: -moz-max-content !important;
+	width: max-content !important;
 }.min-w-0 {
 	min-width: 0px !important;
 }.min-w-full {

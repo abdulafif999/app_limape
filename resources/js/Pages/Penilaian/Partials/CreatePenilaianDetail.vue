@@ -77,8 +77,8 @@
                                                             <td rowspan="2" class="px-4 py-4 whitespace-nowrap border border-black" style="vertical-align:middle">
                                                                 {{item.nama}}
                                                             </td>
-                                                            <td class="py-3 text-left text-xs tracking-wider options border-r-2 border-b-2 w-48 border-t-2" style="vertical-align:middle"  v-for="keterangan in item.nilais" :key="keterangan.keterangan">
-                                                                <p v-snip:js="3">
+                                                            <td class="py-3 text-left text-xs tracking-wider options border-r-2 border-b-2 w-max border-t-2" style="vertical-align:middle"  v-for="keterangan in item.nilais" :key="keterangan.keterangan">
+                                                                <p class="flex-wrap">
                                                                     {{keterangan.keterangan}}
                                                                 </p>
                                                             </td>

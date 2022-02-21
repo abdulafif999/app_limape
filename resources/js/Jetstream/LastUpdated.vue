@@ -190,23 +190,11 @@ export default{
                 listNilai: [],
                 periode:'',
                 
-            }),
-            date:new Date(this.penilaians.periode),
-            tim:{},
+            }), 
             maxWidth:'3xl'
         }
     },
-    mounted(){
-        this.getTimUnit();
-    },
     methods:{
-        getTimUnit(){
-            for(var i=0;i<this.timUnits.length;i++){
-                if(this.timUnits[i].pernum == this.currentUser){
-                    this.tim = this.timUnits[i];
-                }
-            }
-        },
         showPenilaian(penilaian){
             this.showModal = true;
             this.selectedPenilaian = penilaian;

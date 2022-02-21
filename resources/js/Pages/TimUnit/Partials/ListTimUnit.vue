@@ -9,23 +9,23 @@
                             <thead class="bg-gray-50" :v-on:show="getTimMember()">
                                 <tr>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         No 
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nama Tim
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Ketua Tim
                                     </th>    
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Unit
                                     </th>   
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Kategori Unit
                                     </th>                                                                                                         
                                     <th scope="col" class="relative px-6 py-3">
@@ -38,32 +38,32 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="(tim, index) in showTim" :key="tim.id">
-                                    <td class="px-6 py-4 border-r-2 whitespace-nowrap">
+                                    <td class="px-2 py-4 border-r-2 whitespace-nowrap">
                                         <div class="flex items-center">
                                             {{ index+1 }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             {{ tim.nama }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             {{ tim.nama_karyawan }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             {{ tim.unit}}
                                         </div>
                                     </td>                                   
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             {{ tim.kategori}}
                                         </div>
                                     </td>                                                                             
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex">
+                                    <td class="px-2 py-4 whitespace-nowrap text-right text-sm font-medium flex">
                                         <green-button href="#" @click.prevent="addMember(tim)" >Add Member</green-button>
                                         <blue-button href="#" @click.prevent="showMember(tim)" >Show Member</blue-button>
                                         <jet-button href="#" @click.prevent="updateTim(tim)" >Ubah Nama Tim</jet-button>

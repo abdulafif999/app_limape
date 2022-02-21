@@ -121,7 +121,7 @@ export default defineComponent({
 
                 for(var i = 0;i<this.penilaians.length;i++){
                     var periode = new Date(this.penilaians[i].periode);
-                    if(periode.getMonth() == date && this.timList[index].id == this.penilaians[i].tim_unit_id){
+                    if(periode.getMonth() == date && periode.getFullYear() == bulan.getFullYear() &&  this.timList[index].id == this.penilaians[i].tim_unit_id){
                         counter++;
                     }
                 }

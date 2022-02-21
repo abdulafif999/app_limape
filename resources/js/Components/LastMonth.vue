@@ -118,7 +118,7 @@ export default defineComponent({
             for (let index = 0; index < this.tim_yg_dinilai.length; index++) {
                 for(var i = 0;i<this.penilaians.length;i++){
                     var periode = new Date(this.penilaians[i].periode);
-                    if(periode.getMonth() == bulan){
+                    if(periode.getMonth() == bulan && periode.getFullYear() == date.getFullYear()){
                         if(this.penilaians[i].pernum == this.timPenilai.karyawan.pernum){
                             if(this.penilaians[i].tim_unit_id == this.tim_yg_dinilai[index].tim_unit_id){
                                 this.checked_tim++;

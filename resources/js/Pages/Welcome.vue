@@ -3,17 +3,19 @@
 
     <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
         <div v-if="canLogin" class="flex fixed top-0 right-0 px-6 py-1 sm:block">
-            <Link :href="route('dashboard') " class="mr-4 text-sm text-gray-700 underline">
+            <Link v-if="$page.props.user" href="/dashboard" class="underline py-2 px-4  bg-gray-900 hover:bg-gray-600 focus:ring-white focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg">
                 Dashboard
             </Link>
 
-            <Link :href="route('login')" class="text-sm text-gray-700 underline">
-                Log in
-            </Link>
+            <template v-else>
+                <Link :href="route('login')" class="underline py-2 px-4  bg-gray-900 hover:bg-gray-600 focus:ring-white focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg">
+                    Log in
+                </Link>
 
-            <Link v-if="canRegister" :href="route('register')" class="ml-4 text-sm text-gray-700 underline">
-                Register
-            </Link>  
+                <!-- <inertia-link v-if="canRegister" :href="route('register')" class="ml-4 text-sm text-gray-700 underline">
+                    Register
+                </inertia-link> -->
+            </template>
                      
         </div>
 
@@ -32,18 +34,21 @@
 
     <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}" class="sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-                <Link :href="route('dashboard')" class="mr-4 text-sm text-gray-700 underline">
+            <div v-if="canLogin" class="flex fixed top-0 right-0 px-6 py-1 sm:block">
+                <Link v-if="$page.props.user" href="/dashboard" class="underline py-2 px-4  bg-gray-900 hover:bg-gray-600 focus:ring-white focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg">
                     Dashboard
                 </Link>
 
-                <Link :href="route('login')" class="text-sm text-gray-700 underline">
-                    Log in
-                </Link>
+                <template v-else>
+                    <Link :href="route('login')" class="underline py-2 px-4  bg-gray-900 hover:bg-gray-600 focus:ring-white focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg">
+                        Log in
+                    </Link>
 
-                <Link v-if="canRegister" :href="route('register')" class="ml-4 text-sm text-gray-700 underline">
-                    Register
-                </Link>
+                    <!-- <inertia-link v-if="canRegister" :href="route('register')" class="ml-4 text-sm text-gray-700 underline">
+                        Register
+                    </inertia-link> -->
+                </template>
+                     
             </div>
         </div>
     </div>

@@ -85,32 +85,32 @@
                             <thead class="bg-gray-50">
                                 <tr class="border-t-2">
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         No
                                     </th>                                     
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         v-if="$page.props.user.role=='admin'">
                                         Nama Tim
                                     </th>                                    
                                     <th scope="col"
-                                        class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nama Penilai
                                     </th>                                   
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Tim 5P/Unit yg Dinilai
                                     </th>                                    
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Tanggal Penilaian
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Periode
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                         v-if="$page.props.user.role=='admin' "> 
                                         Status
                                     </th>
@@ -121,44 +121,44 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-if="data.dataPenilaian < 1">
-                                    <td class="px-6 py-4 whitespace-nowrap border-r-2" colspan="8">
+                                    <td class="px-3 py-4 whitespace-nowrap border-r-2" colspan="8">
                                             <div class="flex items-center text-center">
                                                 Tidak Ada Penilaian
                                             </div>
                                     </td> 
                                 </tr>
                                 <tr v-for="(penilaian, index) in displayedPosts" :key="penilaian.id">
-                                        <td class="px-6 py-4 whitespace-nowrap border-r-2">
+                                        <td class="px-3 py-4 whitespace-nowrap border-r-2">
                                             <div class="flex items-center">
-                                                {{ index+1 }}
+                                                {{ ((page*perPage) - perPage + index)+1 }}
                                             </div>
                                         </td>                                    
-                                        <td class="px-6 py-4 whitespace-nowrap" v-if="$page.props.user.role=='admin'">
+                                        <td class="px-3 py-4 whitespace-nowrap" v-if="$page.props.user.role=='admin'">
                                             <div class="flex items-center">
                                                 {{ penilaian.nama_tim }}
                                             </div>
                                         </td> 
-                                        <td class="px-2 py-4 whitespace-nowrap">
+                                        <td class="px-3 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 {{ penilaian.karyawan.nama }}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-3 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 {{ penilaian.tim_unit.nama }}
                                             </div>
                                         </td>                                                                        
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-3 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 {{ penilaian.tgl }}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
+                                        <td class="px-3 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 {{new Date(penilaian.periode).getMonth()+1 }}/{{new Date(penilaian.periode).getFullYear()}}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap" v-if="$page.props.user.role=='admin'">
+                                        <td class="px-3 py-4 whitespace-nowrap" v-if="$page.props.user.role=='admin'">
                                             <div class="flex items-center text-green-600" v-if="penilaian.approve == true">
                                                 Sudah difinalisasi
                                             </div>
@@ -166,7 +166,7 @@
                                                 Belum difinalisasi
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right flex text-sm font-medium">
+                                        <td class="px-3 py-4 whitespace-nowrap text-right flex text-sm font-medium">
                                             <span><blue-button href="#" @click.prevent="openNilai(penilaian)">Show Nilai</blue-button></span>
                                         </td>
                                 </tr>
@@ -278,9 +278,12 @@
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
-                                                    <span><jet-button v-if="$page.props.user.pernum == penilaian.penilaian.pernum && $page.props.user.role == 'user' && new Date(penilaian.penilaian.periode).getMonth() == setBulan(1) || new Date(penilaian.penilaian.periode).getMonth() == new Date(today).getMonth()" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
-                                                    <span><jet-button v-if="$page.props.user.role == 'admin'" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
+                                                <div class="flex items-center" v-if="$page.props.user.role == 'admin'">
+                                                    
+                                                    <span><jet-button  href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
+                                                </div>
+                                                <div v-if="$page.props.user.role == 'user'" class="flex items-center" >
+                                                    <span><jet-button v-if="$page.props.user.pernum == penilaian.penilaian.pernum && new Date(penilaian.penilaian.periode).getMonth() == setBulan(1) && new Date(penilaian.penilaian.periode).getFullYear() == new Date(today).getFullYear() || new Date(penilaian.penilaian.periode).getMonth() == new Date(today).getMonth() && new Date(penilaian.penilaian.periode).getFullYear() == new Date(today).getFullYear()" href="#" @click.prevent="editConfirmation(penilaian)">Edit Nilai</jet-button></span>
                                                 </div>
                                             </td>                                                            
                                         </tr>
@@ -301,6 +304,11 @@
                                             <!-- More people... -->
                                     </tbody>
                                 </table>
+                                <div>
+                                    <green-button v-if="form.listNilai.length < 1" @click="tambahData()" class="w-1/4">
+                                        Tambah
+                                    </green-button>
+                                </div>
                                 
                                 </div>
                             </div>
@@ -382,6 +390,7 @@
 <script>
 import JetButton from '@/Jetstream/Button.vue'
 import BlueButton from '@/Components/BlueButton.vue'
+import GreenButton from '@/Components/GreenButton.vue'
 import JetDialogModal from '@/Jetstream/DialogModal.vue'
 import JetInput from '@/Jetstream/Input.vue'
 import JetInputError from '@/Jetstream/InputError.vue'
@@ -409,7 +418,7 @@ export default {
         Pagination,
         SlidingPagination,
         BlueButton,
-        BlueButton,
+        GreenButton,
 
     },
 
@@ -657,7 +666,7 @@ export default {
         },
         searchTerm(){
             if(this.term == 'semua' || this.term == ''){
-                this.$inertia.get(this.route('penilaian.index', {term: '', periode:''}, {preserveState:true, replace:true}));
+                this.$inertia.get(this.route('penilaian.index', {term: '', periode:this.form.periode}, {preserveState:true, replace:true}));
                 this.getData();
             }else{
                 this.$inertia.get(this.route('penilaian.index', {term: this.term, periode:this.form.periode}, {preserveState:true, replace:true}));
@@ -689,6 +698,9 @@ export default {
                     }
                 }
             }
+        },
+        tambahData(){
+            this.$inertia.get(this.route('penilaianDetail.index', {penilaian_id:this.selectedPenilaian.id, pernum:this.selectedPenilaian.pernum}))
         },
 		setPages () {
 			let numberOfPages = Math.ceil(this.data.dataPenilaian.length / this.perPage);
