@@ -71,6 +71,8 @@
                                                     <option value="" disabled selected>Pilih Tahun</option>
                                                     <option value="2021">2021</option>
                                                     <option value="2022">2022</option>
+                                                    <option value="2023">2023</option>
+                                                    <option value="2024">2024</option>
                                                 </select>    
                                             </label>
                                     </th>
@@ -304,7 +306,7 @@
                                             <!-- More people... -->
                                     </tbody>
                                 </table>
-                                <div>
+                                <div v-if="$page.props.user.pernum == this.selectedPenilaian.pernum || $page.props.user.role == 'admin'">
                                     <green-button v-if="form.listNilai.length < 1" @click="tambahData()" class="w-1/4">
                                         Tambah
                                     </green-button>
@@ -804,7 +806,7 @@ export default {
         display: inline-block;
     
     }
-            a {
+            a{
                 background: #65a2e9;
                 margin: .25rem;
                 padding: .25rem .5rem;
